@@ -1,0 +1,97 @@
+@import 'function';
+
+/* BEM
+ -------------------------- */
+@mixin b($block) {
+  $B: $namespace + '-' + $block !global;
+
+  .#{$B} {
+    @content;
+  }
+}
+
+@mixin e($element) {
+  $E: $element;
+  $selector: &;
+  $currentSelector: '';
+  @each $unit in $element {
+    $currentSelector: #{$currentSelector +
+      '.' +
+      $B +
+      $element-separator +
+      $unit +
+      ','};
+  }
+
+  @if hit-all-special-nest-rule($selector) {
+    @at-root {
+      #{$selector} {
+        #{$currentSelector} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root {
+      #{$currentSelector} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin m($modifier) {
+  $selector: &;
+  $currentSelector: '';
+  @each $unit in $modifier {
+    $currentSelector: #{$currentSelector +
+      & +
+      $modifier-separator +
+      $unit +
+      ','};
+  }
+
+  @at-root {
+    #{$currentSelector} {
+      @content;
+    }
+  }
+}
+
+@mixin is($state) {
+  @at-root {
+    &.is-#{$state} {
+      @content;
+    }
+  }
+}
+
+@mixin has($state) {
+  @at-root {
+    &.has-#{$state} {
+      @content;
+    }
+  }
+}
+
+@mixin utils-clearfix {
+  $selector: &;
+
+  @at-root {
+    #{$selector}::before,
+    #{$selector}::after {
+      display: table;
+      content: '';
+    }
+
+    #{$selector}::after {
+      clear: both;
+    }
+  }
+}
+
+@mixin utils-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

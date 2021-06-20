@@ -1,0 +1,131 @@
+@import '~@agr/themes/var.scss';
+@import './icon.scss';
+/*
+=====================================滚动条样式初始化=================================
+*/
+::-webkit-scrollbar {
+  width: 5px;
+  height: 7px;
+  background-color: transparent;
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, .2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.olPopup{
+	font-family: segoe UI,PingFang SC,Microsoft Yahei,arial,Helvetica,"sans-serif";
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}
+
+.welcome {
+  .link {
+    fill: $--color-brand;
+  }
+}
+
+.el-tabs  {
+  .el-tabs__nav {
+    height: 32px;
+  }
+  .el-tabs__item {
+    height: 32px;
+    line-height: 32px;
+  }
+}
+
+.el-tabs .el-tabs__content {
+  padding: 0;
+}
+
+.vehicle-status-icon::before  {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #FA3239;
+  margin-right: 9px;
+}
+
+.vehicle-status-icon.orange::before {
+  background: #FD9511;
+}
+
+.vehicle-status-icon.yellow::before {
+  background: #2080FC;
+}
+
+
+.vehicle-status-icon.blue::before {
+  background: #1BDEBC;
+}
+
+.vehicle-status-icon.grey::before {
+  background: #D8D8D8;
+}
+
+.alarm-level-summary {
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alarm-level-text {
+  display: inline-block;
+  color: rgba(0,0,0,0.50);
+  margin-right: 16px;
+}
+
+.alarm-table.el-table td{
+  padding: 3px 0;
+}
+
+.statistics-page {
+  background-color: #f5f5f5;
+  .left-bar {
+    position: relative;
+    background: #fff;
+    box-shadow: inset -1px 0 0 0 #E8E8E8;
+    .tree-body {
+      border-top: none;
+    }
+  }
+  .right-bar {
+    background: #fff;
+    padding: 8px 8px 8px 16px;
+    background-clip: content-box;
+  }
+
+  .right-bar>.h-layout-header {
+    padding: 4px 16px 4px
+  }
+
+  .right-bar>.h-layout-content {
+    padding: 0 16px;
+    overflow: auto;
+  }
+}
+
+.statistics-page-table {
+  .el-table {
+    border: none;
+  }
+  .el-table:after {
+    width: 0;
+  }
+  .el-paged-table__pagination {
+    border: none;
+  }
+}

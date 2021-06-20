@@ -1,0 +1,89 @@
+.location-wrap .control-box-center .control-label {
+    width: 98px;
+    margin-right: 16px;
+    color: rgba(0,0,0,0.40);
+    text-align: right;
+  }
+
+  .location-wrap ul.control-box-center {
+    height: inherit;
+  }
+
+  .location-wrap ul.control-box-center > li {
+    height: 20px;
+    line-height: 20px;
+    color: #666;
+    padding-left: 0;
+    margin-bottom: 16px;
+  }
+
+  .location-wrap ul.control-box-center > li span {
+    display: inline-block;
+    width: 240px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+  }
+
+  .location-wrap .popup-bottom {
+    border-top: 1px solid #E0E0E0 !important;
+    height: 48px;
+    line-height: 48px;
+    left: 0;
+    right: 0;
+    position: absolute;
+    bottom: 4px;
+    margin: 0 16px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .location-wrap .popup-bottom i {
+    display: inline-block;
+    padding: 8px;
+  }
+
+  .location-wrap .control-pic {
+    width: 92px;
+    display: inline-block;
+    position: absolute;
+    top: 48px;
+    right: 24px;
+  }
+  .olPopup li:hover {
+    background: none !important;
+  }
+
+  .arrow-wrap {
+    position: absolute;
+    left: 328px;
+    width: 80px;
+    height: 32px;
+    bottom: 0;
+    background-color: #fff;
+    box-shadow: 0 0.01rem 0.06rem rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #e5e5e5;
+    border-bottom: none;
+    cursor: pointer;
+  }
+
+  .show-tab .arrow-wrap {
+    bottom: 264px;
+  }
+
+  .show-tab .arrow-wrap > i {
+    transform: rotateZ(180deg);
+  }
+
+  .tool-Bar {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+  }

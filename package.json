@@ -1,0 +1,92 @@
+{
+  "name": "ctm01ttvm",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "icons": "node build/icons.js",
+    "serve": "vue-cli-service serve",
+    "build": "npm run icons && vue-cli-service build:theme --mode production && vue-cli-service build:i18n && vue-cli-service registry:hui-pro && vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "node ./bin/eslintProxy.js --ext .js,.vue -o autoTarget/eslint/lint.html",
+    "build:i18n": "vue-cli-service build:i18n",
+    "build:only": "vue-cli-service build",
+    "build:theme": "vue-cli-service build:theme",
+    "cz:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "lint:fix": "vue-cli-service lint --fix",
+    "registry:hui-pro": "vue-cli-service registry:hui-pro",
+    "update": "vue-cli-service registry:hui-pro && vue-cli-service build:theme"
+  },
+  "dependencies": {
+    "@hui/svg-icon": "^1.0.1",
+    "core-js": "^2.6.5",
+    "echarts": "^4.7.0",
+    "mockjs": "^1.1.0",
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.1.2",
+    "zipkin": "^0.20.0"
+  },
+  "devDependencies": {
+    "@agr/vue-cli-plugin-base": "^1.1.20",
+    "@agr/vue-cli-plugin-changelog": "^1.1.17",
+    "@agr/vue-cli-plugin-i18n": "^1.1.17",
+    "@agr/vue-cli-plugin-registry": "^1.1.0",
+    "@agr/vue-cli-plugin-theme": "^1.1.20",
+    "@commitlint/cli": "^7.2.0",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@hui-pro/empty": "^1.14.0",
+    "@hui-pro/error-dialog": "^1.0.1",
+    "@hui-pro/img-preview": "^1.17.0",
+    "@hui-pro/layout": "^1.14.0",
+    "@hui-pro/locale": "^1.13.0",
+    "@hui-pro/page": "^1.14.0",
+    "@hui-pro/utils": "^1.14.3",
+    "@hui-pro/vehicle-plate-tag": "^1.15.0",
+    "@hui/eslint-config-vue": "^1.0.4",
+    "@hui/stylelint-scss": "^1.0.2",
+    "@vue/cli-plugin-babel": "^3.12.0",
+    "@vue/cli-plugin-eslint": "^3.12.0",
+    "@vue/cli-plugin-unit-jest": "^3.12.0",
+    "@vue/cli-service": "^3.12.0",
+    "@vue/eslint-config-prettier": "^5.0.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "axios": "^0.19.2",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "commitizen": "^3.0.5",
+    "conventional-changelog": "^3.0.5",
+    "conventional-changelog-cli": "^2.0.12",
+    "cz-customizable": "^5.2.0",
+    "dolphin-plugin-tools": "^2.6.7",
+    "eslint": "^5.16.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "hui": "~2.0.42",
+    "husky": "^1.1.1",
+    "prettier": "^1.18.2",
+    "raw-loader": "^3.1.0",
+    "sass": "^1.19.0",
+    "sass-loader": "^8.0.0",
+    "traceservice-instrumentation-axios": "^0.2.0",
+    "vue-i18n": "^7.1.1",
+    "vue-svg-loader": "^0.12.0",
+    "vue-template-compiler": "^2.6.10",
+    "webfonts-generator": "^0.4.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}

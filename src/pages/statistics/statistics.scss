@@ -1,0 +1,57 @@
+.export-dialog {
+    .el-dialog__body-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+    }
+    .el-input-number {
+      margin: 0 6px;
+    }
+  }
+
+.statistics-page .statistics-tab {
+  height: 100%;
+  .el-tabs__nav {
+    height: 48px;
+  }
+  .el-tabs__item {
+    line-height: 48px;
+    height: 48px;
+  }
+  .el-tabs__content {
+    height: calc(100% - 48px);
+  }
+  .el-tab-pane {
+    height: 100%;
+  }
+}
+
+
+.statistics-page .statistics-chart-wrap{
+  display: flex;
+  margin-bottom: 10px;
+
+  .chart {
+    display: flex;
+    flex-direction: column;
+    height: 326px;
+    flex: 1;
+    padding: 10px 0 10px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .chart-title {
+    font-size: 16px;
+    line-height: 24px;
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .chart-container {
+    flex: 1;
+  }
+
+  .chart:first-child {
+    margin-right: 20px;
+  }
+}

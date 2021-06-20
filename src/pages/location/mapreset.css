@@ -1,0 +1,157 @@
+/*重写hui样式*/
+.location-wrap .el-slider__runway.disabled .el-slider__bar, .el-slider__runway.disabled .el-slider__button{
+   background-color: #2080f7 !important;
+}
+
+.location-wrap .el-slider__button{
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/*重写HGIS地图样式*/
+.location-wrap .olControlPanZoomBarEx {
+  position: absolute;
+  bottom: 300px !important;
+  left: 8px !important;
+  top: inherit !important;
+}
+
+.location-wrap .olControlLayerSwitchEx{
+  top: 70px !important;
+}
+
+.location-wrap .olControlMouseTipControl{
+  font-size: 10px;
+}
+
+.location-wrap #infoWindowId *{
+  border:0;
+  color: #4A4A4A ;
+  font-family: 'PingFangSC-Semibold';
+}
+
+.location-wrap .titleDisplayClass{
+  height: 36px;
+  line-height:36px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-left: 16px;
+  font-size:14px;
+}
+
+.location-wrap #infoWindowId_close{
+  display: none !important;
+}
+
+.location-wrap .titleDisplayClass > i{
+  display: block;
+  float: right;
+  margin-right: 16px;
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.location-wrap .titleDisplayClass > i:hover{
+  cursor: pointer;
+}
+
+.olPopup{
+  overflow: visible !important;
+}
+.olPopup > div{
+  overflow: visible !important;
+}
+.olPopupContent > textarea{
+  padding:0px !important;
+  overflow-y: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.olPopupCloseBox {
+  display: none;
+}
+
+/*定位监控公共样式*/
+.location-wrap .left-bar-wrap{
+  font-size: 12px;
+  position: absolute;
+  top: 64px;
+  bottom: 0px;
+  width: 318px;
+  background-color: #fff;
+}
+
+.location-wrap .left-bar-body{
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.location-wrap .left-bar-foot{
+  position: absolute;
+  bottom: 0;
+  width:318px;
+  height: 64px;
+  line-height: 64px;
+}
+
+.left-bar-foot .el-button--primary {
+  width: 318px;
+}
+.left-bar-foot .el-button {
+  max-width: 318px !important;
+}
+
+.mt8 {
+  margin-top: 8px;
+}
+
+.mr8 {
+  margin-right: 8px;
+}
+
+.ml8 {
+  margin-left: 8px;
+}
+
+.mt16 {
+  margin-top: 16px !important;
+}
+
+.size-16 {
+  font-size: 16px;
+}
+
+.size32{
+  font-size:32px;
+}
+
+.required {
+  color: red
+}
+
+i:hover {
+  /* cursor: pointer; */
+}
+
+.location-wrap .el-1111-scrollbar__wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.location-wrap .el-1111-scrollbar__view{
+  padding-left:0px;
+}
+
+.location-wrap ul.el-1111-scrollbar__view > li{
+  width:240px;
+  display:block;
+  height:36px;
+  padding-left: 16px;
+  line-height: 36px;
+}
