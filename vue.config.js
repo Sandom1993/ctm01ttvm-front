@@ -77,41 +77,41 @@ const main = {
                 // target: 'http://10.120.11.94:17001',
                 // target: 'http://10.196.44.13:17001',
                 // target: 'http://10.196.44.62:17001', // 后端地址yangbo
-                // target: 'https://183.230.82.18:400', // 正式环境
-                target: 'https://183.230.82.16', // 测试地址
+                target: 'https://183.230.82.18:400', // 正式环境
+                // target: 'https://183.230.82.16', // 测试地址
                 changeOrigin: true,
                 onProxyReq(proxyReq, req, res) {
                     proxyReq.setHeader(
                         'Cookie',
-                        'JSESSIONID=l5cFSkF8DNAr6rDZiXK7K592fgLixEuatpajrOJa; portal_sess=xzeeJV7ySJrCehjxw_xWOQR40HA2tdzS2_J4h-mR7B0BB03z-VmiosCmCY1RgCrU; csrfToken=IaCAMSNGxbfipeU7XZO6FoJP; CASTGC=TGT-27-fsU9wEwolKab6As3nHG0XQUdjtg5gOrIYlJdSwe5l3GPoiIre1-cas'
+                        'JSESSIONID=4QZ8bXfPCm9wo3KrTvIxywTOl_q76q_dnq25i_3S; portal_locale_cookie=zh-cn; csrfToken=BZsFJxNErmAE7iTC1nESD2Eq; CASTGC=TGT-9945-c3vp5ncZywMsCGelvmQb0cgzpg4QrTypPtl3QUOHbHNOA60zfi-cas; portal_sess=DONIimpbQeWG9ONXcwf8HX26F38O1ODdVjEeBQ2eUGTa2Gv9hFLcndsXJEHBTzgL'
                     )
                 }
             },
             '/alarmupload-acs': {
                 // target: 'http://10.196.44.13:17100',
                 // target: 'http://10.196.44.62:17001',
-                target: 'https://183.230.82.16',
-                  // target: 'https://183.230.82.18:400',
+                // target: 'https://183.230.82.16',
+                  target: 'https://183.230.82.18:400',
                 changeOrigin: true
             },
             '/ctm01ttvm-acs': {
                 // target: 'http://10.196.42.111:17002',
                 // target: 'http://10.196.44.62:17001',
-                // target: 'https://183.230.82.18:400',
-                target: 'https://183.230.82.16',
+                target: 'https://183.230.82.18:400',
+                // target: 'https://183.230.82.16',
                 changeOrigin: true
             },
             '/hgis-web': {
                 // target: 'https://10.19.155.166',
-                // target: 'https://183.230.82.18:400',
-                target: 'https://183.230.82.16',
+                target: 'https://183.230.82.18:400',
+                // target: 'https://183.230.82.16',
                 // target: 'http://10.196.44.62:17001',
                 changeOrigin: true
             },
             '/hgis-services': {
                 // target: 'https://10.19.155.166',
-                // target: 'https://183.230.82.18:400',
-                target: 'https://183.230.82.16',
+                // target: 'https://183.230.82.16',
+                target: 'https://183.230.82.18:400',
                 // target: 'http://10.196.44.62:17001',
                 changeOrigin: true
             }

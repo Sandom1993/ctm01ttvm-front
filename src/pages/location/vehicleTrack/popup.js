@@ -12,6 +12,8 @@ const {getAddress} = require('../monitor/maptools');
 export function popTraceContext(info) {
     // console.log(info)
     return new Promise((resolve, reject) => {
+        // const isRed = info.time > info.serverTime;
+        // console.log(isRed);
         getAddress(
             [info.longitude / 360000, info.latitude / 360000],
             null,
@@ -72,7 +74,13 @@ export function popTraceContext(info) {
                         <li>
                             <span class="control-label">定位时间</span>
                             <span id="lastLocationTime" v-empty>
-                                ${ formatDate(info.time) || '' }
+                                <div style="color:red" v-if="${info.time} > ${info.serverTime}">
+                                    ${ formatDate(info.time) || '' }
+                                </div>
+<!--                                D08V36-->
+                                <div v-else>
+                                    ${ formatDate(info.time) || '' }
+                                </div>
                             </span>
                         </li>
                         <li>
@@ -103,7 +111,7 @@ export function popTraceContext(info) {
                         <li>
                             <span class="control-label">当班驾驶员</span>
                             <span id="m_driverName" v-empty style="width:120px">
-                            ${ info.ibmData.driverInfo.driverName ? info.ibmData.driverInfo.driverName : '' }
+                            ${ info.ibmData.driverInfo ? info.ibmData.driverInfo.driverName : '' }
                         </span>
                         </li>
                         <li>
@@ -129,30 +137,30 @@ export function popTraceContext(info) {
                         <li>
                             <span class="control-label">性别</span>
                             <span id="sex" v-empty>
-                                ${ info.ibmData.driverInfo.sex ? info.ibmData.driverInfo.sex : '' }
+                                ${ info.ibmData.driverInfo ? info.ibmData.driverInfo.sex : '' }
                           </span>
                         </li>
                         <li>
                             <span class="control-label">联系方式</span>
                             <span id="tel" v-empty>
-                                ${ info.ibmData.driverInfo.tel ? info.ibmData.driverInfo.tel : '' }
+                                ${ info.ibmData.driverInfo ? info.ibmData.driverInfo.tel : '' }
                           </span>
                         </li>
                         <li>
                             <span class="control-label">单位名称</span>
                             <span id="company" v-empty>
-                                ${ info.ibmData.driverInfo.company ? info.ibmData.driverInfo.company : ''}
+                                ${ info.ibmData.driverInfo ? info.ibmData.driverInfo.company : ''}
                           </span>
                         </li>
                         <li>
                             <span class="control-label">准驾车型</span>
                             <span id="vehicleType" v-empty>
-                                ${ info.ibmData.driverInfo.vehicleType ? info.ibmData.driverInfo.vehicleType : '' }
+                                ${ info.ibmData.driverInfo ? info.ibmData.driverInfo.vehicleType : '' }
                           </span>
                         </li>
                         <li>
                             <span class="control-label">家庭住址</span>
-                            <span id="driver_address" v-empty>${ info.ibmData.driverInfo.address ? info.ibmData.driverInfo.address : '' }</span>
+                            <span id="driver_address" v-empty>${ info.ibmData.driverInfo ? info.ibmData.driverInfo.address : '' }</span>
                         </li>
                     </ul>
                 </el-tab-pane>
