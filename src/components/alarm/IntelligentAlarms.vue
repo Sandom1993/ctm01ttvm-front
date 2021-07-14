@@ -590,6 +590,7 @@ export default {
             this.total = json.data.total;
             this.allAlarms = json.data.list.map(item => {
               item.speed = alarmUtils.formatSpeed(item.beginSpeed);
+              item.maxSpeed = alarmUtils.formatSpeed(item.maxSpeed); // add by chenying 2021.07.14
               item.recordSpeed = alarmUtils.formatSpeed(item.recordSpeed);
               item.latitude = item.beginLatitude;
               item.longitude = item.beginLongitude;
