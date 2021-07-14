@@ -695,15 +695,15 @@ export default {
         },
         //  核定，复核 disabled
         getApproveType(type, row) {
+            // 审核状态 approveStatus：-1 未审核 0 系统审核 1 已初审 2 已复审
+            // return (
+            //     row.relateAlarmId === null && row.eventTypeName !== '超速'
+            // );
             // update by chenying 2021.06.09
             return (
-                row.relateAlarmId === null && row.eventTypeName !== '超速'
+                type !== Number(this.$route.query.approveStatus) ||
+                    row.relateAlarmId === null && row.eventTypeName !== '超速'
             );
-            // return (
-            //     type !== Number(this.$route.query.approveStatus) ||
-            //         row.checkStatus === '已复核' ||
-            //         row.eventTypeName !== '超速'
-            // );
         },
         //  获取核警信息
         getApproveInfo(alarm) {
@@ -780,6 +780,7 @@ export default {
         },
         //  表格查询
         handleQuery() {
+            console.log(this.getApproveType());
             this.loading = true;
             const {
                 queryParams: {
