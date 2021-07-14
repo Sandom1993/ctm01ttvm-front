@@ -59,11 +59,11 @@ export default [
                 path: '/location/noTraffic',
                 component: 'location/noTraffic/NoTraffic'
             },
-            // {
-            //     name: 'AutomaticAlarm', // 自动处警
-            //     path: '/location/automaticAlarm',
-            //     component: 'location/automaticAlarm/AutomaticAlarm'
-            // },
+            {
+                name: 'AutomaticAlarm', // 自动处警
+                path: '/location/automaticAlarm',
+                component: 'location/automaticAlarm/AutomaticAlarm'
+            },
             {
                 name: 'PlatformAssess',
                 path: '/location/platformAssess',

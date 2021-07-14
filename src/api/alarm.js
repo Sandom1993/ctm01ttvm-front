@@ -116,3 +116,18 @@ export function getFocusVehicleList() {
     url: '/focus/getFocusVehicleList'
   });
 }
+
+// 自动处警-查询列表
+export function getDealStrategy(params) {
+    return http.get({
+        url: '/dealStrategy/queryDealStrategy',
+        params: params
+    });
+}
+// 自动处警-新增
+export function saveDealStrategy(params) {
+    return http.post({
+        url: '/dealStrategy/save',
+        data: params
+    });
+}

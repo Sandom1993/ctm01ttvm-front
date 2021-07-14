@@ -13,8 +13,8 @@ systemError.cover = false;
 const http = axios.create({
   timeout: 180000,
   withCredentials: true,
-  headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': getToken() },
-  // headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': '4a4cbea8-fe0f-413a-a8c1-5cf50b61a0c4' },
+  // headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': getToken() },
+  headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': 'a722bb8e-37ae-4aa8-867f-c9cc946d2247' },
   baseURL: `/${process.env.VUE_APP_CONTEXT}/` // 接口基本路径
 });
 
