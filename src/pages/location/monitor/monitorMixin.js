@@ -480,8 +480,7 @@ export default {
                         gps.ibmData && gps.ibmData.driverInfo && gps.ibmData.driverInfo.company ? gps.ibmData.driverInfo.company : '',
                     vehicleTypeDrive: // 准驾车型
                         gps.ibmData && gps.ibmData.driverInfo && gps.ibmData.driverInfo.vehicleType ? gps.ibmData.driverInfo.vehicleType : '',
-                    driverTime:
-                        gps.ibmData && gps.ibmData.driverInfo && gps.ibmData.driverInfo.time ? gps.ibmData.driverInfo.time : '',
+
                     talkDeviceIndexCode,
                     vehicleIndexCode: gps.vehicleIndexCode,
                     id: `infoWindowId_${gps.vehicleIndexCode}`,
@@ -494,6 +493,10 @@ export default {
                     driverNo:
                         gps.attendanceDTO && gps.attendanceDTO.certificateID
                             ? gps.attendanceDTO.certificateID
+                            : '',
+                    driverTime:
+                        gps.attendanceDTO && gps.attendanceDTO.time
+                            ? gps.attendanceDTO.time
                             : '',
                     // tel: gps.attendanceDTO && gps.attendanceDTO.tel ? gps.attendanceDTO.tel : '',
                     driverIndexCode:
