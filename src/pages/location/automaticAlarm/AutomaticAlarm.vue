@@ -14,7 +14,6 @@
                 :is-need-search-type="true"
                 @load="loadChildren"
                 @deviceClick="handleSelectedNodes"
-
             >
             </org-tree>
         </h-layout-aside>
