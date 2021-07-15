@@ -1,5 +1,6 @@
 <template>
     <h-layout class="statistics-page">
+
         <h-layout-aside width="280px" class="left-bar">
             <org-tree
                 ref="resourceTree"
@@ -11,54 +12,67 @@
                 :slot-line="3"
                 :is-need-check-box="isNeedCheckBox"
                 :is-need-search-type="true"
+                @load="loadChildren"
                 @deviceClick="handleSelectedNodes"
             >
             </org-tree>
         </h-layout-aside>
-        <h-layout class="right-bar">
+        <div ref="pageBox" class="page-box">
+            <h-layout class="right-bar">
             <h-layout-header>
                 <el-button icon="h-icon-add" @click="dialogVisible = true ">
                     新增
                 </el-button>
             </h-layout-header>
             <h-layout-content style="overflow: auto;">
-                <el-table
-                    :data="tableData"
-                    force-scroll
-                    v-loading="false"
-                    highlight-current-row
-                >
-                    <el-table-column
-                        prop=""
-                        label="报警类型"
-                    ></el-table-column>
-                    <el-table-column
-                        prop=""
-                        label="内容"
-                    ></el-table-column>
-                    <el-table-column
-                        prop=""
-                        label="下发方式"
-                    ></el-table-column>
-                    <el-table-column
-                        prop=""
-                        label="自动触警"
-                    ></el-table-column>
-                    <el-table-column label="操作" width="100" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button type="link" @click="editMaticAlarm(scope.row)">编辑</el-button>
-                        </template>
-                    </el-table-column>
-                    <!--                    <el-table-column v-if="isRealtime" label="操作" width="100" fixed="right">-->
-                    <!--                        <template slot-scope="scope">-->
-                    <!--                            <el-button type="link" @click="onConfirmAlarm(scope.row)">确认</el-button>-->
-                    <!--                            <el-button type="link" @click="onDealAlarm(scope.row)">处理</el-button>-->
-                    <!--                        </template>-->
-                    <!--                    </el-table-column>-->
-                </el-table>
+                    <el-table
+                        :data="tableData"
+                        :height="tableHeight - 130"
+                        force-scroll
+                        v-loading="false"
+                        highlight-current-row
+                    >
+                        <el-table-column
+                            prop="eventType"
+                            label="报警类型"
+                        ></el-table-column>
+                        <el-table-column
+                            prop="broadcastContent"
+                            label="内容"
+                        ></el-table-column>
+                        <el-table-column
+                            prop=""
+                            label="下发方式"
+                        ></el-table-column>
+                        <el-table-column
+                            prop=""
+                            label="自动触警"
+                        ></el-table-column>
+                        <el-table-column label="操作" width="100" fixed="right">
+                            <template slot-scope="scope">
+                                <el-button type="link" @click="editMaticAlarm(scope.row)">编辑</el-button>
+                            </template>
+                        </el-table-column>
+                        <!--                    <el-table-column v-if="isRealtime" label="操作" width="100" fixed="right">-->
+                        <!--                        <template slot-scope="scope">-->
+                        <!--                            <el-button type="link" @click="onConfirmAlarm(scope.row)">确认</el-button>-->
+                        <!--                            <el-button type="link" @click="onDealAlarm(scope.row)">处理</el-button>-->
+                        <!--                        </template>-->
+                        <!--                    </el-table-column>-->
+                    </el-table>
+                <el-pagination
+                    ref="pagination"
+                    :page-sizes="[30, 50, 100]"
+                    :page-size="pageSize"
+                    :current-page="pageNo"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total"
+                    @size-change="onSizeChange"
+                    @current-change="onCurrentChange"
+                ></el-pagination>
             </h-layout-content>
         </h-layout>
-
+        </div>
         <el-dialog
             title="报警配置"
             top="middle"
@@ -153,10 +167,17 @@ export default {
     },
     data() {
         return {
+            pageNo: 1,
+            pageSize: 10,
+            total: 0,
+            orgIndexCode:'',
             indexCode: '', // tree的indexCode
             tableData: [],
             loading: false,
             dialogVisible: false,
+            shouldSearch: false,
+            tableHeight: null,
+            tableWidth: null,
             options: [
                 {
                     value: 0,
@@ -180,34 +201,39 @@ export default {
                 onTTS: 0,
                 onTerminal: 0,
                 onLED: 0,
-            }
+            },
         }
     },
     created() {
-        // this.$nextTick(() => {
-        // })
+    },
+    mounted() {
+        this.resize();
+        window.addEventListener('resize', this.resize);
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.resize);
     },
     methods: {
+        loadChildren (data){
+            this.indexCode = data.indexCode
+            this.handleQuery(this.indexCode);
+        },
         handleSelectedNodes(node) {
-            // console.log(node.indexCode)
-            this.indexCode = node.indexCode;
-            if (this.indexCode === '' || this.indexCode === null) {
-                this.$message({
-                    type: 'warning',
-                    message: '请至少选择一条数据'
-                });
-            } else {
-                const params = {
-                    orgIndexCode: this.indexCode
-                }
-                this.loading = true;
-                getDealStrategy(params).then(res => {
-                    if (res.code === '0') {
-                        this.tableData = res.data;
-                    }
-
-                });
+            this.indexCode = node.indexCode
+            this.handleQuery(this.indexCode);
+        },
+        handleQuery (orgIndexCode){
+            const params = {
+                orgIndexCode: orgIndexCode,
+                pageNo: this.pageNo,
+                pageSize: this.pageSize
             }
+            getDealStrategy(params).then(res => {
+                if (res.code === '0') {
+                    this.total = res.data.total;
+                    this.tableData = res.data.list;
+                }
+            });
         },
         editMaticAlarm(row) {
             console.log(row)
@@ -250,11 +276,6 @@ export default {
                 this.handleClose();
             });
         },
-        getCheckboxValue(name){
-            if (name) {
-                name = 1
-            }
-        },
         //  关闭对话框
         handleClose() {
             this.resetForm('saveStrategy');
@@ -269,14 +290,33 @@ export default {
         radioChange(e) {
             this.isError = e === '0';
         },
+        onCurrentChange(pageNo) {
+            this.pageNo = pageNo;
+            this.handleQuery(this.indexCode);
+        },
+        onSizeChange(pageSize) {
+            this.pageSize = pageSize;
+            this.handleQuery(this.indexCode);
+        },
+        resize() {
+            this.tableHeight = this.$refs.pageBox.clientHeight;
+            this.tableWidth = this.$refs.pageBox.clientWidth;
+        },
     },
 }
 </script>
 
 <style lang="scss" scoped>
+.page-box {
+    width: 100%;
+}
+.statistics-page .right-bar{
+    padding-left: 8px;
+}
 ::v-deep {
     .el-form-item{
         margin-bottom: 15px;
     }
+
 }
 </style>

@@ -70,6 +70,7 @@ export default {
         return {
             filterText: '',
             dataWithIcon: [],
+            orgIndexCode: '',
             defaultProps: {
                 children: 'children',
                 label: 'name',
@@ -87,7 +88,7 @@ export default {
     },
     methods: {
         handleNodeClick(data) {
-            // 点击树节点
+            // 点击树节点 add by chenying 2021.07.15
             this.$emit('deviceClick', data);
         },
         setIcons(data) {
@@ -114,6 +115,7 @@ export default {
         },
         loadChildren(node, resolve) {
             const _this = this;
+            console.log(_this)
             getNewOrgTree({
                 treeCode: '0',
                 id: node.data.id,
@@ -145,6 +147,7 @@ export default {
                     });
                     const checkedNode = this.$refs.resourceTree.getCheckedNodes();
                     const halfCheckedNode = this.$refs.resourceTree.getHalfCheckedNodes();
+
                     let checkedNodeNew = newNode.filter(item => item.checked);
                     let halfCheckedNodeNew = newNode.filter(item => item.halfChecked);
                     newNode.forEach(item => {
@@ -250,10 +253,6 @@ export default {
         handleExpandNode() {
             this.isExpandAll = false;
             this.isExpandPath = false;
-        },
-        getIndexCode(data) {
-            // console.log(data.indexCode)
-            // return data.indexCode
         },
         expandPath(node) {
             const num = this.treePath.length - 2;
