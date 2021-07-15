@@ -76,7 +76,7 @@ const main = {
                 // target: `http://${ip.address()}:8341`,
                 target: 'http://10.196.42.59:17001',
                 // target: 'https://183.230.82.18:400', // 正式环境
-                // target: 'https://183.230.82.16', // 测试地址
+                // target: 'https://183.230.82.16', // 测试环境
                 changeOrigin: true,
                 onProxyReq(proxyReq, req, res) {
                     proxyReq.setHeader(

@@ -240,16 +240,14 @@ export default {
                         message: '下发成功！'
                     });
                     // this.$refs.saveStrategy.handleClose();
-                    this.handleClose();
                 } else {
                     this.$message({
                         type: 'warning',
                         message: '下发失败！'
                     });
                     // this.$refs.saveStrategy.handleClose();
-                    // this.handleClose();
                 }
-
+                this.handleClose();
             });
         },
         getCheckboxValue(name){

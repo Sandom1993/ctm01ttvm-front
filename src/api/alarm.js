@@ -117,7 +117,7 @@ export function getFocusVehicleList() {
   });
 }
 
-// 自动处警-查询列表
+// 自动处警-查询
 export function getDealStrategy(params) {
     return http.get({
         url: '/dealStrategy/queryDealStrategy',
