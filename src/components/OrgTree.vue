@@ -122,6 +122,11 @@ export default {
                 checked: false
             }).then(json => {
                 if (json.code === '0') {
+                    // console.log(json.data)
+                    if (json.data[0].parentId === '-1' && json.data[0].parent === true) {
+                        // console.log(json.data[0].indexCode)
+                        this.$emit('load',json.data[0])
+                    }
                     const resNode = json.data.map(item => {
                         if (item.children) {
                             item.children = item.children.map(child => {

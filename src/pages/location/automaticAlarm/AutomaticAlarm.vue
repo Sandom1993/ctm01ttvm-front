@@ -33,36 +33,80 @@
                         highlight-current-row
                     >
                         <el-table-column
-                            prop="eventType"
+                            prop="eventTypeName"
                             label="报警类型"
-                        ></el-table-column>
+                            width="100"
+                        >
+                            <template slot-scope="scope">
+                                {{
+                                    scope.row.eventTypeName
+                                }}
+                            </template>
+
+                        </el-table-column>
                         <el-table-column
                             prop="broadcastContent"
                             label="内容"
                         ></el-table-column>
+
                         <el-table-column
+                            width="480"
                             prop=""
                             label="下发方式"
-                        ></el-table-column>
+                        >
+                            <template slot-scope="scope">
+                                <el-checkbox
+                                    v-model="scope.row.onEmergent"
+                                >
+                                    紧急
+                                </el-checkbox>
+
+                                <el-checkbox
+                                    v-model="scope.row.onTTS"
+                                >
+                                    终端TTS播报
+                                </el-checkbox>
+
+                                <el-checkbox
+                                    v-model="scope.row.onTerminal"
+
+                                >
+                                    终端显示器显示
+                                </el-checkbox>
+
+                                <el-checkbox
+                                    v-model="scope.row.onLED"
+                                >
+                                    广告屏显示
+                                </el-checkbox>
+                            </template>
+                        </el-table-column>
+
                         <el-table-column
-                            prop=""
+                            prop="status"
                             label="自动触警"
-                        ></el-table-column>
+                            width="100"
+                        >
+                            <template slot-scope="scope">
+                                <el-switch
+                                    :width="43"
+                                    v-model="scope.row.status"
+                                    :active-value="1"
+                                    :inactive-value="0"
+                                    active-color="rgb(19,206,102)"
+                                    inactive-color="#B9B9B9"
+                                    @change="changeSwitch(scope.row)"/>
+                            </template>
+                        </el-table-column>
+
                         <el-table-column label="操作" width="100" fixed="right">
                             <template slot-scope="scope">
                                 <el-button type="link" @click="editMaticAlarm(scope.row)">编辑</el-button>
                             </template>
                         </el-table-column>
-                        <!--                    <el-table-column v-if="isRealtime" label="操作" width="100" fixed="right">-->
-                        <!--                        <template slot-scope="scope">-->
-                        <!--                            <el-button type="link" @click="onConfirmAlarm(scope.row)">确认</el-button>-->
-                        <!--                            <el-button type="link" @click="onDealAlarm(scope.row)">处理</el-button>-->
-                        <!--                        </template>-->
-                        <!--                    </el-table-column>-->
                     </el-table>
                 <el-pagination
                     ref="pagination"
-                    :page-sizes="[30, 50, 100]"
                     :page-size="pageSize"
                     :current-page="pageNo"
                     layout="total, sizes, prev, pager, next, jumper"
@@ -135,10 +179,30 @@
 
                 <div style="margin-bottom: 5px">下发方式</div>
                 <el-form-item label="" prop="typeOn">
-                    <el-checkbox v-model="checkForm.onEmergent">紧急</el-checkbox>
-                    <el-checkbox v-model="checkForm.onTTS">终端TTS播报</el-checkbox>
-                    <el-checkbox v-model="checkForm.onTerminal">终端显示器显示</el-checkbox>
-                    <el-checkbox v-model="checkForm.onLED">广告屏显示</el-checkbox>
+                    <el-checkbox
+                        v-model="checkForm.onEmergent"
+                    >
+                        紧急
+                    </el-checkbox>
+
+                    <el-checkbox
+                        v-model="checkForm.onTTS"
+                    >
+                        终端TTS播报
+                    </el-checkbox>
+
+                    <el-checkbox
+                        v-model="
+                        checkForm.onTerminal"
+                    >
+                        终端显示器显示
+                    </el-checkbox>
+
+                    <el-checkbox
+                        v-model="checkForm.onLED"
+                    >
+                        广告屏显示
+                    </el-checkbox>
                 </el-form-item>
             </el-form>
 
@@ -172,7 +236,9 @@ export default {
             total: 0,
             orgIndexCode:'',
             indexCode: '', // tree的indexCode
+            checkList: [],
             tableData: [],
+            status: 1,
             loading: false,
             dialogVisible: false,
             shouldSearch: false,
@@ -202,6 +268,32 @@ export default {
                 onTerminal: 0,
                 onLED: 0,
             },
+            alist : [
+                {
+                    broadcastContent : 'neirnongaklshalkfjhaklsjhdfklajshdf',
+                    eventType: 2,
+                    id: 102,
+                    onEmergent: 1,
+                    onLED: 0,
+                    onTTS: 1,
+                    onTerminal: 0,
+                    orgIndexCode: '54858754a5sdf5a4sdf9wefra2ds1f',
+                    status: 1,
+                    userId: 'admin'
+                },
+                {
+                    broadcastContent : 'awer243wefrs中文中文',
+                    eventType: 1,
+                    id: 102,
+                    onEmergent: 1,
+                    onLED: 0,
+                    onTTS: 1,
+                    onTerminal: 1,
+                    orgIndexCode: '54858754a5sdf5a4sdf9wefra2ds1f',
+                    status: 0,
+                    userId: 'admin'
+                }
+            ]
         }
     },
     created() {
@@ -215,8 +307,11 @@ export default {
     },
     methods: {
         loadChildren (data){
-            this.indexCode = data.indexCode
-            this.handleQuery(this.indexCode);
+            this.$nextTick(() => {
+                this.indexCode = data.indexCode
+                console.log('treeLoad')
+                this.handleQuery(this.indexCode);
+            })
         },
         handleSelectedNodes(node) {
             this.indexCode = node.indexCode
@@ -228,19 +323,50 @@ export default {
                 pageNo: this.pageNo,
                 pageSize: this.pageSize
             }
-            getDealStrategy(params).then(res => {
-                if (res.code === '0') {
-                    this.total = res.data.total;
-                    this.tableData = res.data.list;
+            console.log(params)
+            // getDealStrategy(params).then(res => {
+            //     if (res.code === '0') {
+            //         this.total = res.data.total;
+            //         this.tableData = res.data.list;
+            //     }
+            // });
+            this.alist.forEach(item => {
+                if (item.eventType === 0){
+                    this.$set(item,'eventTypeName','超速')
+                } else if (item.eventType === 1) {
+                    this.$set(item,'eventTypeName','夜间禁行')
+                } else if (item.eventType === 2) {
+                    this.$set(item,'eventTypeName','疲劳驾驶')
                 }
-            });
+
+                this.$set(item, 'onLED', item.onLED === 1 ? true : false);
+                this.$set(item, 'onEmergent', item.onEmergent === 1 ? true : false);
+                this.$set(item, 'onTerminal', item.onTerminal === 1 ? true : false);
+                this.$set(item, 'onTTS', item.onTTS === 1 ? true : false);
+
+            })
+            // console.log(this.alist)
+
+            this.tableData = [...this.alist]
+            console.log(this.tableData)
         },
         editMaticAlarm(row) {
-            console.log(row)
+
+            this.$set(row,'radio',row.status.toString());
+            // this.$set(row,'onEmergent',row.onEmergent === 1 ? true : false);
+            // this.$set(row,'onTerminal',row.onTerminal === 1 ? true : false);
+            // this.$set(row,'onTTS',row.onTTS === 1 ? true : false);
+
+            this.indexCode = row.orgIndexCode;
+            this.checkForm = row;
+            console.log(this.checkForm)
+            this.dialogVisible = true ;
             // this.checkForm = row
         },
         // 保存
         handleOk() {
+            console.log(this.status)
+            // console.log(this.indexCode)
             if (this.indexCode === '' || this.indexCode === null) {
                 this.$message({
                     type: 'warning',
@@ -252,7 +378,7 @@ export default {
                 broadcastContent: this.checkForm.broadcastContent,
                 eventType: parseInt(this.checkForm.eventType),
                 // userId:
-                status: '1', // 是否启用：是1，否 0
+                status: this.status, // 是否启用：是1，否 0
                 orgIndexCode: this.indexCode,
                 onLED: this.checkForm.onLED === true ? '1' : '0',
                 onEmergent: this.checkForm.onEmergent === true ? '1' : '0',
@@ -290,12 +416,19 @@ export default {
         radioChange(e) {
             this.isError = e === '0';
         },
+        // 修改状态
+        changeSwitch(row) {
+            this.indexCode = row.orgIndexCode;
+            this.status =row.status
+            // this.handleOk();
+        },
         onCurrentChange(pageNo) {
             this.pageNo = pageNo;
             this.handleQuery(this.indexCode);
         },
         onSizeChange(pageSize) {
             this.pageSize = pageSize;
+            console.log('pageLoad')
             this.handleQuery(this.indexCode);
         },
         resize() {
@@ -318,5 +451,14 @@ export default {
         margin-bottom: 15px;
     }
 
+    .el-checkbox+.el-checkbox{
+        margin-left: 8px!important;
+    }
+    //.el-checkbox__inner:hover {
+    //    cursor: not-allowed;
+    //}
+    //label.el-checkbox:hover {
+    //    cursor: not-allowed;
+    //}
 }
 </style>
