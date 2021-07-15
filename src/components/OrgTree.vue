@@ -115,7 +115,6 @@ export default {
         },
         loadChildren(node, resolve) {
             const _this = this;
-            console.log(_this)
             getNewOrgTree({
                 treeCode: '0',
                 id: node.data.id,
