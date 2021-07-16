@@ -88,5 +88,9 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:Sandom1993/ctm01ttvm-front.git",
+  "author": "Sandom1993",
+  "license": "MIT"
 }

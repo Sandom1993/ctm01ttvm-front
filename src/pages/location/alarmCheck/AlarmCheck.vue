@@ -696,13 +696,11 @@ export default {
         //  核定，复核 disabled
         getApproveType(type, row) {
             // 审核状态 approveStatus：-1 未审核 0 系统审核 1 已初审 2 已复审
-            // return (
-            //     row.relateAlarmId === null && row.eventTypeName !== '超速'
-            // );
             // update by chenying 2021.06.09
             return (
                 type !== Number(this.$route.query.approveStatus) ||
-                    row.relateAlarmId === null && row.eventTypeName !== '超速'
+                    row.relateAlarmId === null && row.eventTypeName !== '超速' &&
+                    Number(this.$route.query.type) === 1
             );
         },
         //  获取核警信息
