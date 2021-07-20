@@ -778,7 +778,6 @@ export default {
         },
         //  表格查询
         handleQuery() {
-            console.log(this.getApproveType());
             this.loading = true;
             const {
                 queryParams: {

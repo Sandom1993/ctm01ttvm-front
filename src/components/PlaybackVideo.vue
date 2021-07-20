@@ -85,7 +85,7 @@
 <script>
 import { Promise } from 'q';
 import { setInterval, clearInterval } from 'timers';
-import { getToken, getGS } from '@/api/location.js';
+import {getToken, getGS, getUserInfo} from '@/api/location.js';
 import { findVideoPlaybackUrl } from '@/api/alarm.js';
 import { startapp } from '@/components/checkTools.js';
 
@@ -215,6 +215,7 @@ export default {
     };
     this.resize();
     window.addEventListener('resize', this.resize);
+
     this.init();
     this.checkIE();
     const _this = this;
@@ -263,7 +264,6 @@ export default {
       this.isShowToolbar = false;
     },
     init() {
-
         if (this.clientWidth || this.width) {
             if (this.JSPluginObj) {
                 this.destroy();
@@ -379,8 +379,10 @@ export default {
       if (url && pURL && proxy && token) {
         this.showPlay = false;
         // console.log(this.JSPluginObj)
-        //  update by chenying 2021.05.31
-        if (this.JSPluginObj === null) {
+        //  update by chenying 2021.07.20
+        if (!this.JSPluginObj) {
+            this.width = this.$refs.warp.clientWidth;
+            this.height = this.$refs.warp.clientHeight;
             this.init();
         }
         this.JSPluginObj.JS_Play(
@@ -548,9 +550,10 @@ export default {
           originVideoId: this.originVideoId
         }
       ];
+
       const params = {
-        userId: this.userInfo.userId,
-        domainId: this.userInfo.domainId,
+        userId: this.$store.state.userInfo.userId,
+        domainId: this.$store.state.userInfo.domainId,
         videoIdParams: param
       };
       const strToBase64 = btoa(JSON.stringify(params));
@@ -585,7 +588,6 @@ export default {
           // 'http://10.41.6.115:8057',
           postLink
         );
-        // console.log(postLink);
       });
     },
     resize() {

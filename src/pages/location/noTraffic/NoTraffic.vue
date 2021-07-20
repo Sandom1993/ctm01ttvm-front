@@ -54,13 +54,7 @@
                                                 clearable
                                             />
                                         </el-col>
-<!--                                        <el-time-picker-->
-<!--                                            is-range-->
-<!--                                            v-model="noTraffic[49691]"-->
-<!--                                            :disabled="handleDisabled(49691)"-->
-<!--                                            start-placeholder="开始时间"-->
-<!--                                            end-placeholder="结束时间"-->
-<!--                                        />-->
+
                                     </el-form-item>
                                 </el-col>
                             </el-row>
@@ -286,6 +280,9 @@ export default {
         switchDevice(data) {
             this.selectedNodes = data;
             this.isOnline = data[0].online === 1;
+            if (this.isOnline2 === true && data[0].online === 0) {
+                this.isOnline2 = false;
+            }
             // this.contentLoading = true;
             this.terminalIds = [];
             this.$forceUpdate();
@@ -409,14 +406,19 @@ export default {
                                 parseInt(startTime/60/60),
                                 parseInt(startTime/60%60),
                                 startTime%(60)
-                            ),new Date(
+                            ),
+                                new Date(
                                 now.getFullYear(),
                                 now.getMonth() +1,
                                 now.getDate(),
                                 parseInt(endTime/60/60),
                                 parseInt(endTime/60%60),
                                 endTime%(60)
-                            )]
+                            )
+                            ];
+
+                            this.startTime = obj[49691][0];
+                            this.endTime = obj[49691][1];
                         } else {
                             obj[item.id] = item.value;
                         }
@@ -431,7 +433,7 @@ export default {
                     this.contentLoading = false; // 关闭loading
                 }
             })
-        }
+        },
     },
 }
 </script>
