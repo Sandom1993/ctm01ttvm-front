@@ -330,7 +330,7 @@
                     title="核警"
                     top="middle"
                     :visible.sync="checkVisible"
-                    :area="[444, 341]"
+                    :area="[445, 358]"
                     size="small"
                     :before-close="handleClose"
                 >
@@ -374,7 +374,17 @@
                                 placeholder="描述..."
                             ></el-input>
                             <div v-else>
+                                <el-input
+                                    v-if="this.tempRow.eventType !== 132405"
+                                    v-model="checkForm.remark"
+                                    type="textarea"
+                                    :rows="4"
+                                    :count="100"
+                                    tips-placement="right"
+                                    placeholder="请输入误报原因..."
+                                ></el-input>
                                 <el-select
+                                    v-else
                                     v-model="checkForm.remark"
                                     placeholder="请选择误报原因"
                                 >
@@ -696,14 +706,39 @@ export default {
         //  核定，复核 disabled
         getApproveType(type, row) {
             // 审核状态 approveStatus：-1 未审核 0 系统审核 1 已初审 2 已复审
-            // update by chenying 2021.06.09
-            return (
-                type !== Number(this.$route.query.approveStatus) ||
-                    row.relateAlarmId === null && row.eventTypeName !== '超速' &&
-                    Number(this.$route.query.type) === 1
-            );
+            // update by chenying 2021.07.22
+            // console.log(type+'，'+ Number(this.$route.query.approveStatus))
+            if (Number(this.$route.query.type) === 1) { // 卫星定位
+                return (
+                    type !== Number(this.$route.query.approveStatus) &&
+                    row.relateAlarmId === null && row.eventTypeName !== '超速'
+                );
+            }
+            if (Number(this.$route.query.type) === 2) { // 智能视频
+                // 疲劳驾驶 225442,出区域 132408,进区域 132409,紧急报警 132441，凌晨禁行 132424
+                return (
+                    type !== Number(this.$route.query.approveStatus) ||
+                    row.relateAlarmId === null &&
+                        row.eventType === 225442 ||
+                        row.eventType === 132408 ||
+                        row.eventType === 132409 ||
+                        row.eventType === 132441 ||
+                        row.eventType === 132424
+                );
+            }
+            if (Number(this.$route.query.type) === 0) {  // 警情中心
+                return (
+                    type !== Number(this.$route.query.approveStatus) || row.relateAlarmId === null &&
+                    row.eventType === 225442 ||
+                    row.eventType === 132408 ||
+                    row.eventType === 132409 ||
+                    row.eventType === 132441 ||
+                    row.eventType === 132424 ||
+                    row.eventTypeName === 132405
+                );
+            }
         },
-        //  获取核警信息
+        // 获取核警信息
         getApproveInfo(alarm) {
             if (!alarm.label) {
                 return {};
@@ -993,7 +1028,10 @@ export default {
                     ]
                 };
                 if (this.checkForm.radio === '0') {
-                    const tempVal = findIndexObject(this.options, ['label', this.checkForm.remark]).value === 0 ? 20 : 21;
+                    let tempVal = 0;
+                    if (this.tempRow.eventType === 132405) {
+                        tempVal = findIndexObject(this.options, ['label', this.checkForm.remark]).value === 0 ? 20 : 21;
+                    }
                     params.labels.push({key: 'ruleNo', value: String(tempVal)});
                 }
                 saveAlarmLabel(params).then(res => {

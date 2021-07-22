@@ -45,9 +45,16 @@
 
                         </el-table-column>
                         <el-table-column
+                            :show-overflow-tooltip="true"
                             prop="broadcastContent"
                             label="内容"
-                        ></el-table-column>
+                        >
+                            <template slot-scope="scope">
+                                {{
+                                    scope.row.broadcastContent
+                                }}
+                            </template>
+                        </el-table-column>
 
                         <el-table-column
                             width="480"
@@ -83,20 +90,22 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="status"
+                            prop=""
                             label="自动触警"
                             width="100"
                         >
                             <template slot-scope="scope">
                                 <el-switch
                                     size="small"
-                                    v-model="scope.row.status"
+                                    :value="scope.row.status"
                                     :active-value="1"
                                     :inactive-value="0"
                                     active-color="rgb(19,206,102)"
                                     inactive-color="#B9B9B9"
-                                    @change="changeSwitch(scope.row)"/>
+                                    @input="changeSwitch(scope.$index,scope.row)"/>
+<!--                                {{scope.row.status}}-->
                             </template>
+
                         </el-table-column>
 
                         <el-table-column label="操作" width="100" fixed="right">
@@ -131,6 +140,7 @@
                 :model="checkForm"
                 label-width="90px"
                 content-width="400px"
+                :rules="rules"
             >
                 <div style="margin-bottom: 5px">警情类型</div>
                 <el-form-item label="" prop="eventType">
@@ -223,6 +233,7 @@
 
 <script>
 import OrgTree from '@/components/OrgTree';
+import validate from '@/components/validate.js';
 import {getAllAlarmTypes, getDealStrategy, saveDealStrategy} from "@/api/alarm";
 
 export default {
@@ -241,9 +252,7 @@ export default {
             total: 0,
             orgIndexCode:'',
             indexCode: '', // tree的indexCode
-            checkList: [],
-            tableData: [],
-            // status: 1, // <!-- 1-开启，0-关闭 -->
+            statusAuto: '1',
             loading: false,
             dialogVisible: false,
             shouldSearch: false,
@@ -253,8 +262,7 @@ export default {
             options: [
                 {
                     value: 0,
-                    label:
-                        '超速'
+                    label: '超速'
                 },
                 {
                     value: 1,
@@ -266,6 +274,7 @@ export default {
                 }
             ],
             isChangeStatus: false,
+            tableData: [],
             checkForm: {
                 status: '1',
                 eventType: '',
@@ -273,33 +282,13 @@ export default {
                 onTTS: 0,
                 onTerminal: 0,
                 onLED: 0,
+                broadcastContent: '',
             },
-            // alist : [
-            //     {
-            //         broadcastContent : 'neirnongaklshalkfjhaklsjhdfklajshdf',
-            //         eventType: 2,
-            //         id: 102,
-            //         onEmergent: 1,
-            //         onLED: 0,
-            //         onTTS: 1,
-            //         onTerminal: 0,
-            //         orgIndexCode: '54858754a5sdf5a4sdf9wefra2ds1f',
-            //         status: 1,
-            //         userId: 'admin'
-            //     },
-            //     {
-            //         broadcastContent : 'awer243wefrs中文中文',
-            //         eventType: 1,
-            //         id: 102,
-            //         onEmergent: 1,
-            //         onLED: 0,
-            //         onTTS: 1,
-            //         onTerminal: 1,
-            //         orgIndexCode: '54858754a5sdf5a4sdf9wefra2ds1f',
-            //         status: 0,
-            //         userId: 'admin'
-            //     }
-            // ]
+            rules: {
+                broadcastContent: [
+                    { required: true, message: '请输入处置内容', trigger: 'blur' }
+                ]
+            }
         }
     },
     created() {
@@ -356,24 +345,15 @@ export default {
         },
         // 编辑
         editMaticAlarm(row) {
-            this.$set(row,'status',row.status.toString());
+            // 深度克隆
+            this.checkForm = Object.assign({}, row);
+            this.$set(this.checkForm,'status',this.checkForm.status.toString());
             this.indexCode = row.orgIndexCode;
-            this.dialogVisible = true ;
-            // this.isAdd = false ;
-            this.checkForm = row ;
+            this.dialogVisible = true;
         },
         // 新增
         addMaticAlarm() {
             this.dialogVisible = true ;
-            // this.isAdd = true;
-            this.checkForm = {
-                    status: '1',
-                    eventType: '',
-                    onEmergent: 0,
-                    onTTS: 0,
-                    onTerminal: 0,
-                    onLED: 0,
-            }
         },
         // 保存
         handleOk() {
@@ -382,6 +362,9 @@ export default {
                     type: 'warning',
                     message: '请至少选择一条数据'
                 });
+                return false;
+            }
+            if (this.checkForm.broadcastContent === '' ) {
                 return false;
             }
             const params ={
@@ -430,39 +413,38 @@ export default {
             this.isError = e === '0';
         },
         // 修改状态
-        changeSwitch(row) {
-            // if(this.isChangeStatus) {
-                this.indexCode = row.orgIndexCode;
-                this.checkForm = row;
-                console.log(row.status)
-            this.$nextTick(() => {
-                const params ={
-                    broadcastContent: row.broadcastContent,
-                    eventType: parseInt(row.eventType),
-                    status: row.status, // 是否启用：是1，否 0
-                    orgIndexCode: row.orgIndexCode,
-                    onLED: row.onLED === true ? '1' : '0',
-                    onEmergent: row.onEmergent === true ? '1' : '0',
-                    onTTS: row.onTTS === true ? '1' : '0',
-                    onTerminal: row.onTerminal === true ? '1' : '0',
-                }
-                saveDealStrategy(params);
-            })
-            const that = this;
-            setTimeout(function() {
-                that.handleQuery(row.orgIndexCode);
-            },3000)
-
-        },
-        handleBeforeChange(value) {
+        changeSwitch(index,row) {
             this.$confirm('是否确认修改自动处警方式？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'question'
             })
                 .then(() => {
-                    // this.isChangeStatus = true;
-                    this.changeSwitch();
+                    this.indexCode = row.orgIndexCode;
+                    this.checkForm = row;
+                    // let ob = false;
+                    const params ={
+                        broadcastContent: row.broadcastContent,
+                        eventType: parseInt(row.eventType),
+                        status: row.status === 1 ? 0 : 1, // 是否启用：是1，否 0
+                        orgIndexCode: row.orgIndexCode,
+                        onLED: row.onLED === true ? '1' : '0',
+                        onEmergent: row.onEmergent === true ? '1' : '0',
+                        onTTS: row.onTTS === true ? '1' : '0',
+                        onTerminal: row.onTerminal === true ? '1' : '0',
+                    }
+                    saveDealStrategy(params).then( result => {
+                        if (result.code === '0') {
+                            this.$message({type: 'success', message: '修改成功!'});
+                            const that = this;
+                            that.handleQuery(row.orgIndexCode);
+                            // setTimeout(function () {
+                            // let newData = row;
+                            // newData.status = newData.status === 1 ? '0' : '1';
+                            // this.tableData[index] = newData;
+                            // }, 1000);
+                        }
+                    });
                     done();
                 })
                 .catch(() => {});
