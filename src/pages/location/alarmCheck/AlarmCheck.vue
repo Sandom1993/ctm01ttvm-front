@@ -710,7 +710,7 @@ export default {
             // console.log(type+'，'+ Number(this.$route.query.approveStatus))
             if (Number(this.$route.query.type) === 1) { // 卫星定位
                 return (
-                    type !== Number(this.$route.query.approveStatus) &&
+                    type !== Number(this.$route.query.approveStatus) ||
                     row.relateAlarmId === null && row.eventTypeName !== '超速'
                 );
             }
