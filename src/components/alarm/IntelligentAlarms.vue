@@ -54,7 +54,7 @@
             <el-button @click="resetForm">重置</el-button>
           </div>
         </el-form>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane name="first">
             <tab-badge slot="label" :value="activityAlarms.length">
               主动安全
@@ -88,6 +88,7 @@
               @deal-alarm="dealAlarm"
             ></location-alarm-table>
           </el-tab-pane>
+
           <el-tab-pane name="riskEvent">
             <tab-badge slot="label" :value="riskEvents.length">
               风险事件
@@ -417,18 +418,20 @@ export default {
     }
   },
   created() {
-    if (this.isRealtime) {
-      this.findAlarms();
-      this.findRiskEvents();
-      this.alarmInterval = setInterval(() => {
-        this.findAlarms();
-        this.findRiskEvents();
-      }, ALARM_INTERVAL);
-    } else {
-      this.form.approveStatus = this.defaultApproveStatus;
-      this.doSearch();
-      // this.doSearchRisk();
-    }
+      if (this.activeName === 'first') {
+          if (this.isRealtime) {
+              this.findAlarms();
+              // this.findRiskEvents();
+              this.alarmInterval = setInterval(() => {
+                  this.findAlarms();
+                  // this.findRiskEvents();
+              }, ALARM_INTERVAL);
+          } else {
+              this.form.approveStatus = this.defaultApproveStatus;
+              this.doSearch();
+              // this.doSearchRisk();
+          }
+      }
     this.getBasicInfo();
   },
   mounted() {
@@ -443,6 +446,26 @@ export default {
     }
   },
   methods: {
+      handleClick(tab) {
+          if (tab.name === 'riskEvent') {
+                this.activeName = 'riskEvent';
+              if (this.alarmInterval) {
+                  clearInterval(this.alarmInterval);
+              }
+              if (this.isRealtime) {
+                  // this.findAlarms();
+                  this.findRiskEvents();
+                  this.alarmInterval = setInterval(() => {
+                      // this.findAlarms();
+                      this.findRiskEvents();
+                  }, ALARM_INTERVAL);
+              } else {
+                  this.form.approveStatus = this.defaultApproveStatus;
+                  this.doSearch();
+                  // this.doSearchRisk();
+              }
+          }
+      },
     resize() {
       this.tableHeight = this.$refs.tabref.clientHeight - 84;
       if (!this.isRealtime) {

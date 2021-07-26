@@ -63,15 +63,15 @@
                         >
                             <template slot-scope="scope">
                                 <el-checkbox
-                                    v-model="scope.row.onEmergent"
-                                >
-                                    紧急
-                                </el-checkbox>
-
-                                <el-checkbox
                                     v-model="scope.row.onTTS"
                                 >
                                     终端TTS播报
+                                </el-checkbox>
+
+                                <el-checkbox
+                                    v-model="scope.row.onEmergent"
+                                >
+                                    紧急
                                 </el-checkbox>
 
                                 <el-checkbox
@@ -188,19 +188,21 @@
                 </el-form-item>
 
                 <div style="margin-bottom: 5px">下发方式</div>
+
+
+                    <el-form-item class="my-form-item" label="" prop="onTTS">
+                        <el-checkbox
+                            v-model="checkForm.onTTS"
+                        >
+                            终端TTS播报
+                        </el-checkbox>
+                    </el-form-item>
+
                 <el-form-item class="my-form-item" label="" prop="onEmergent">
                     <el-checkbox
                         v-model="checkForm.onEmergent"
                     >
                         紧急
-                    </el-checkbox>
-                </el-form-item>
-
-                <el-form-item class="my-form-item" label="" prop="onTTS">
-                    <el-checkbox
-                        v-model="checkForm.onTTS"
-                    >
-                        终端TTS播报
                     </el-checkbox>
                 </el-form-item>
 
@@ -275,15 +277,7 @@ export default {
             ],
             isChangeStatus: false,
             tableData: [],
-            checkForm: {
-                status: '1',
-                eventType: '',
-                onEmergent: 0,
-                onTTS: 0,
-                onTerminal: 0,
-                onLED: 0,
-                broadcastContent: '',
-            },
+            checkForm: {},
             rules: {
                 broadcastContent: [
                     { required: true, message: '请输入处置内容', trigger: 'blur' }
@@ -353,7 +347,16 @@ export default {
         },
         // 新增
         addMaticAlarm() {
-            this.dialogVisible = true ;
+            this.dialogVisible = true;
+            this.checkForm = {
+                status: '1',
+                eventType: '',
+                onEmergent: false,
+                onTTS: true,
+                onTerminal: false,
+                onLED: false,
+                broadcastContent: '',
+            }
         },
         // 保存
         handleOk() {
