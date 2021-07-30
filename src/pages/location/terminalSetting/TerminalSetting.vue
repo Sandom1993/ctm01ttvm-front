@@ -197,14 +197,17 @@ export default {
           deviceIndexCode: data[0].deviceIndexCode
         };
         getDeviceRemoteConfig(params).then(res => {
-          if (res.code === '0') {
+          if (res.code === '0' && res.data !== null) {
             this.terminalFormMsg.defaultLimitSpeed = res.data.defaultLimitSpeed;
             this.terminalFormMsg.warnDifference = res.data.warnDifference;
             this.terminalFormMsg.nightLimit = res.data.nightLimit === 1;
             this.contentLoading = false;
+          } else {
+              this.contentLoading = false;
           }
         });
       });
+
     }
   }
 };

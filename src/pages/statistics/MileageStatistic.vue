@@ -66,7 +66,7 @@
               label="车牌号"
               width="140"
             ></el-table-column>
-            <el-table-column prop="orgName" label="所属组织"></el-table-column>
+            <el-table-column prop="orgName" label="所属单位"></el-table-column>
             <el-table-column prop="beginDate" label="开始日期">
               <template slot-scope="scope">
                 <p>{{ scope.row.beginDate | formateDateTime}}</p>

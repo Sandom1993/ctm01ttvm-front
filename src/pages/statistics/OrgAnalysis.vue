@@ -157,7 +157,7 @@
               {{ getDetailIndex(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="orgName" label="所属组织"></el-table-column>
+          <el-table-column prop="orgName" label="所属单位"></el-table-column>
           <el-table-column
             prop="vehicleLicensePlate"
             label="车牌号"

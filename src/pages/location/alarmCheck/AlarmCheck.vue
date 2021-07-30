@@ -202,7 +202,7 @@
                         </el-table-column>
                         <el-table-column
                             prop="orgName"
-                            label="所属机构"
+                            label="所属单位"
                             width="150"
                             show-overflow-tooltip
                         />

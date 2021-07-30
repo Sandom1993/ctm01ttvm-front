@@ -115,7 +115,7 @@
                         ></el-table-column>
                         <el-table-column
                             prop="orgName"
-                            label="所属组织"
+                            label="所属单位"
                             width="10%"
                         ></el-table-column>
                     </el-table>
@@ -201,7 +201,7 @@
                             prop="driverName"
                             label="当班司机"
                         ></el-table-column>
-                        <el-table-column prop="orgName" label="所属机构"></el-table-column>
+                        <el-table-column prop="orgName" label="所属单位"></el-table-column>
                         <el-table-column prop="address" label="操作" width="100">
                             <template slot-scope="scope">
                                 <el-button
@@ -257,7 +257,7 @@
                             prop="driverName"
                             label="当班司机"
                         ></el-table-column>
-                        <el-table-column prop="orgName" label="所属机构"></el-table-column>
+                        <el-table-column prop="orgName" label="所属单位"></el-table-column>
                         <el-table-column label="速度">
                             <template slot-scope="scope">{{ scope.row.speed }} km/h</template>
                         </el-table-column>

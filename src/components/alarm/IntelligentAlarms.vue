@@ -447,23 +447,28 @@ export default {
   },
   methods: {
       handleClick(tab) {
-          if (tab.name === 'riskEvent') {
-                this.activeName = 'riskEvent';
-              if (this.alarmInterval) {
-                  clearInterval(this.alarmInterval);
-              }
-              if (this.isRealtime) {
-                  // this.findAlarms();
+          this.activeName = 'riskEvent';
+          if (this.alarmInterval) {
+              clearInterval(this.alarmInterval);
+          }
+          if (this.isRealtime) {
+              if (tab.name === 'riskEvent') {
                   this.findRiskEvents();
                   this.alarmInterval = setInterval(() => {
                       // this.findAlarms();
                       this.findRiskEvents();
                   }, ALARM_INTERVAL);
               } else {
-                  this.form.approveStatus = this.defaultApproveStatus;
-                  this.doSearch();
-                  // this.doSearchRisk();
+                  this.findAlarms();
+                  this.alarmInterval = setInterval(() => {
+                      this.findAlarms();
+                      // this.findRiskEvents();
+                  }, ALARM_INTERVAL);
               }
+          } else {
+              this.form.approveStatus = this.defaultApproveStatus;
+              this.doSearch();
+              // this.doSearchRisk();
           }
       },
     resize() {

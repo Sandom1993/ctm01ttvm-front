@@ -29,7 +29,7 @@
             <span class="driver-detail-value">{{ driverDTO.name }}</span>
           </div>
           <div class="driver-detail-item">
-            <span class="driver-detail-label">所属公司：</span>
+            <span class="driver-detail-label">所属单位：</span>
             <span class="driver-detail-value">{{ alarm.orgName }}</span>
           </div>
           <div class="driver-detail-item">

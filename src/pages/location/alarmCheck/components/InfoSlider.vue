@@ -18,7 +18,7 @@
         <img class="avatar" :src="driverimg" />
         <div class="driver-info-detail">
           <p>当班司机：{{info.driverName || '暂无信息'}}</p>
-          <p>所属公司：{{info.orgName || '暂无信息'}}</p>
+          <p>所属单位：{{info.orgName || '暂无信息'}}</p>
           <p>联系电话：{{info.tel || '暂无信息'}}</p>
         </div>
       </div>

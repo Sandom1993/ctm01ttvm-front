@@ -864,7 +864,7 @@
           // mtime: "", //更新时间
           operationManager: '', // 经营负责人
           operationState: '', // 经营状态
-          // orgIndexCode: this.orgIndexCode, //所属组织编号
+          // orgIndexCode: this.orgIndexCode, //所属单位编号
           organizingInstitution: '', // 企业组织机构
           ownerAddress: '', // 业户地址
           ownerQualification: '', // 业户资质
@@ -905,7 +905,7 @@
           // mtime: "", //更新时间
           operationManager: '', // 经营负责人
           operationState: '', // 经营状态
-          orgIndexCode: '', // 所属组织编号
+          orgIndexCode: '', // 所属单位编号
           organizingInstitution: '', // 企业组织机构
           ownerAddress: '', // 业户地址
           ownerQualification: '', // 业户资质

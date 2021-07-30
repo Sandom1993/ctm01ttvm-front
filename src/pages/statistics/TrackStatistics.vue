@@ -76,7 +76,7 @@
               prop="vehicleType"
               label="车辆类型"
             ></el-table-column>
-            <el-table-column prop="orgName" label="所属企业"></el-table-column>
+            <el-table-column prop="orgName" label="所属单位"></el-table-column>
             <el-table-column
               prop="beginTime"
               label="统计日期"

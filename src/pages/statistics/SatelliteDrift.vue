@@ -72,7 +72,7 @@
               label="车牌号"
               width="150"
             ></el-table-column>
-            <el-table-column prop="orgName" label="所属企业"></el-table-column>
+            <el-table-column prop="orgName" label="所属单位"></el-table-column>
             <el-table-column
               prop="driftNum"
               label="总漂移次数"

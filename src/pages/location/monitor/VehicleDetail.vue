@@ -6,7 +6,7 @@
     </div>
     <div ref="header">
       <div class="info-item">
-        <span class="info-label">所属组织</span>
+        <span class="info-label">所属单位</span>
         <span class="info-value">{{ vehicleOrgName }}</span>
       </div>
 <!--      <div class="info-item">-->

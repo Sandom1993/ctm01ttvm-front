@@ -76,7 +76,7 @@
             ></el-table-column>
             <el-table-column
               prop="orgName"
-              label="所属企业"
+              label="所属单位"
               fixed
               width="200"
             ></el-table-column>
