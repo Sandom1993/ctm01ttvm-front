@@ -11,7 +11,13 @@ import {
     trackActive,
     untrackActive
 } from '@/pages/location/monitor/map.js';
-import {getlastGps, batchBroadcast, terminalAbility,getLastAttendance} from '@/api/location';
+import {
+    getlastGps,
+    batchBroadcast,
+    terminalAbility,
+    getLastAttendance,
+    findAbilityDevicesByVehicle
+} from '@/api/location';
 import {throttle} from 'throttle-debounce';
 import {
     getVehicleInfo,
@@ -32,6 +38,7 @@ import alarmUtils from '@/utils/alarm';
 export default {
     data() {
         return {
+            driverInfo: {},
             // 定时器
             timer: null,
             countNum: 0,
@@ -173,7 +180,6 @@ export default {
                 clearInterval(this.timer);
                 // 清除地图,vehicleInfo,重新计算
                 clearMap();
-
                 // 先请求一次
                 getlastGps(arr).then(json => {
                     if (json.data !== null && json.data.length > 0) {
@@ -377,16 +383,7 @@ export default {
         // 切换在地图中心的设备,弹出dialog
         switchDevice: throttle(500, false, function (node) {
             const info = getVehicleInfo(node[0].id);
-            // 查询驾驶员信息
-            let attendanceDTO = null;
-            getLastAttendance({ vehicleIndexCode: gps.vehicleIndexCode}).then( res => {
-                if (res.data !== null) {
-                    attendanceDTO = res.data;
-                }
-            });
             if (info) {
-                Vue.set(info.gps, 'attendanceDTO' , attendanceDTO)
-                // info.gps.attendanceDTO
                 setMapCenter(info.gps);
                 // this.currentRow = node[0].id;
                 this.$refs.resourceTree.$refs.resourceTree.setCurrentKey(node[0].id);
@@ -408,6 +405,15 @@ export default {
                 });
             }
         },
+        getDriverInfo(vehicleIndexCode) {
+            return new Promise(resolve => {
+                getLastAttendance({
+                    vehicleIndexCode: vehicleIndexCode
+                }).then(json => {
+                    resolve(json.data || null);
+                });
+            });
+        },
         onFeatureSelect(feature) {
             // 打开车辆弹窗
             this.imgMarkerClick(feature.data.gps.vehicleIndexCode);
@@ -420,7 +426,6 @@ export default {
             const {gps, status} = info;
             this.clearPopUp();
             // this.currentRow = gps.vehicleIndexCode;
-
             this.$refs.resourceTree.$refs.resourceTree.setCurrentKey(
                 gps.vehicleIndexCode
             );
@@ -457,16 +462,14 @@ export default {
             this.driverImg = gps.driverIndexCode
                 ? `/ctm01ttvm-web/resource/findDriverImage.do?driverIndexCode=${gps.driverIndexCode}&width=100&height=120`
                 : this.img1;
+            const attendanceDTO = await this.getDriverInfo(gps.vehicleIndexCode);
+            console.log(attendanceDTO)
 
             // 最近报警事件
             const lastAlarm = this.getVehicleAlarm(gps.vehicleIndexCode);
-            // const driverSource = gps && gps.driverSource === 2 ? '<span class="driver-source"><i class="h-icon-tag"></i></span>' : '';
 
-            // const IBMData = gps.ibmData; // 驾驶员信息+车辆信息
-            // const driverInfo = IBMData.driverInfo // 驾驶员信息
             const option = {
                 ...gps,
-                ...attendanceDTO,
                 ...{
                     companyName:
                         gps.ibmData && gps.ibmData.companyName ? gps.ibmData.companyName : '',
@@ -501,14 +504,14 @@ export default {
                     location: [gps.longitude / 360000, gps.latitude / 360000],
                     alarmEvent: '无',
 
-                    driverName: gps.attendanceDTO === null ? '' : gps.attendanceDTO.name,
+                    driverName: attendanceDTO === null ? '' : attendanceDTO.name,
                     driverNo:
-                        gps.attendanceDTO !== null ? gps.attendanceDTO.certificateID : '',
+                        attendanceDTO !== null ? attendanceDTO.certificateID : '',
                     driverTime:
-                        gps.attendanceDTO && gps.attendanceDTO.time
-                            ? gps.attendanceDTO.time
+                        attendanceDTO && attendanceDTO.time
+                            ? attendanceDTO.time
                             : '',
-                    driverIndexCode: gps.attendanceDTO === null ? '' : gps.attendanceDTO.vehicleIndexCode,
+                    driverIndexCode: attendanceDTO === null ? '' : attendanceDTO.vehicleIndexCode,
 
                     text,
                     retransFlag,
