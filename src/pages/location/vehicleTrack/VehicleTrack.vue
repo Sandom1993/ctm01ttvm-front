@@ -322,7 +322,7 @@ export default {
             alarmDialogVisible: false,
             trackTableDialogVisible: false,
             // 轨迹表格,已经默认存在的显示项
-            existTargetData: ['GPS时间', 'GPS速度', '经度', '纬度'],
+            existTargetData: ['GPS时间', 'GPS速度', '限速值', 'GPS接收时间', 'ACC'],
             progressTimeRange: ['', ''],
             defaultNode: '',
             hasRestart: false,

@@ -8,6 +8,14 @@ export function getlastGps(vehicleIndexCode) {
   });
 }
 
+// 获取驾驶员信息
+export function getLastAttendance(vehicleIndexCode) {
+    return http.get({
+        url: '/vehicle/findLastAttendance',
+        params: vehicleIndexCode
+    });
+}
+
 // 批量获取设备最新定位
 export function getVehicleDetail(vehicleIndexCode) {
   return http.get({

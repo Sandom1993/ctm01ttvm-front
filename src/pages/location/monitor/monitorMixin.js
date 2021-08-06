@@ -11,7 +11,7 @@ import {
     trackActive,
     untrackActive
 } from '@/pages/location/monitor/map.js';
-import {getlastGps, batchBroadcast, terminalAbility} from '@/api/location';
+import {getlastGps, batchBroadcast, terminalAbility,getLastAttendance} from '@/api/location';
 import {throttle} from 'throttle-debounce';
 import {
     getVehicleInfo,
@@ -173,11 +173,11 @@ export default {
                 clearInterval(this.timer);
                 // 清除地图,vehicleInfo,重新计算
                 clearMap();
+
                 // 先请求一次
                 getlastGps(arr).then(json => {
-                    if (json.data.length > 0) {
+                    if (json.data !== null && json.data.length > 0) {
                         // 对数据进行筛选，如果同一个id的time没有改变则不进行处理
-
                         const dataArr = json.data;
                         const noGPSData = dataArr.filter(item => item.latitude === null);
                         this.warnOffline(noGPSData);
@@ -197,11 +197,12 @@ export default {
                     }
                     this.createTableData();
                 });
+
                 // 定时进行请求 5000ms
                 this.timer = setInterval(() => {
                     // 请求
                     getlastGps(arr).then(json => {
-                        if (json.data.length > 0) {
+                        if (json.data !== null && json.data.length > 0) {
                             // 对数据进行筛选，如果同一个id的time没有改变则不进行处理
 
                             const dataArr = json.data;
@@ -269,10 +270,12 @@ export default {
             closePopup();
         },
         // 在地图上显示树上被选中的节点
-        addPoints(nodes, arr) {
+        addPoints: function (nodes, arr) {
             getlastGps(arr)
                 .then(json => {
-                    if (json.data.length > 0) {
+                    if (!(json.data !== null && json.data.length > 0)) {
+                        this.warnOffline(nodes);
+                    } else {
                         const dataArr = json.data;
                         const noGPSData = dataArr.filter(item => item.latitude === null);
                         this.warnOffline(noGPSData);
@@ -285,8 +288,6 @@ export default {
                             getCluster();
                         }
                         setMapCenter(dataArr[dataArr.length - 1]);
-                    } else {
-                        this.warnOffline(nodes);
                     }
                 })
                 .finally(() => {
@@ -376,7 +377,16 @@ export default {
         // 切换在地图中心的设备,弹出dialog
         switchDevice: throttle(500, false, function (node) {
             const info = getVehicleInfo(node[0].id);
+            // 查询驾驶员信息
+            let attendanceDTO = null;
+            getLastAttendance({ vehicleIndexCode: gps.vehicleIndexCode}).then( res => {
+                if (res.data !== null) {
+                    attendanceDTO = res.data;
+                }
+            });
             if (info) {
+                Vue.set(info.gps, 'attendanceDTO' , attendanceDTO)
+                // info.gps.attendanceDTO
                 setMapCenter(info.gps);
                 // this.currentRow = node[0].id;
                 this.$refs.resourceTree.$refs.resourceTree.setCurrentKey(node[0].id);
@@ -410,6 +420,7 @@ export default {
             const {gps, status} = info;
             this.clearPopUp();
             // this.currentRow = gps.vehicleIndexCode;
+
             this.$refs.resourceTree.$refs.resourceTree.setCurrentKey(
                 gps.vehicleIndexCode
             );
@@ -446,15 +457,16 @@ export default {
             this.driverImg = gps.driverIndexCode
                 ? `/ctm01ttvm-web/resource/findDriverImage.do?driverIndexCode=${gps.driverIndexCode}&width=100&height=120`
                 : this.img1;
+
             // 最近报警事件
             const lastAlarm = this.getVehicleAlarm(gps.vehicleIndexCode);
-            // console.log(gps.attendanceDTO.name)
             // const driverSource = gps && gps.driverSource === 2 ? '<span class="driver-source"><i class="h-icon-tag"></i></span>' : '';
 
             // const IBMData = gps.ibmData; // 驾驶员信息+车辆信息
             // const driverInfo = IBMData.driverInfo // 驾驶员信息
             const option = {
                 ...gps,
+                ...attendanceDTO,
                 ...{
                     companyName:
                         gps.ibmData && gps.ibmData.companyName ? gps.ibmData.companyName : '',
@@ -488,20 +500,16 @@ export default {
                     status,
                     location: [gps.longitude / 360000, gps.latitude / 360000],
                     alarmEvent: '无',
-                    driverName:
-                        gps.attendanceDTO && gps.attendanceDTO.name ? gps.attendanceDTO.name : '',
+
+                    driverName: gps.attendanceDTO === null ? '' : gps.attendanceDTO.name,
                     driverNo:
-                        gps.attendanceDTO && gps.attendanceDTO.certificateID
-                            ? gps.attendanceDTO.certificateID
-                            : '',
+                        gps.attendanceDTO !== null ? gps.attendanceDTO.certificateID : '',
                     driverTime:
                         gps.attendanceDTO && gps.attendanceDTO.time
                             ? gps.attendanceDTO.time
                             : '',
-                    // tel: gps.attendanceDTO && gps.attendanceDTO.tel ? gps.attendanceDTO.tel : '',
-                    driverIndexCode:
-                        gps.driverIndexCode ||
-                        (gps.attendanceDTO ? gps.attendanceDTO.vehicleIndexCode : ''),
+                    driverIndexCode: gps.attendanceDTO === null ? '' : gps.attendanceDTO.vehicleIndexCode,
+
                     text,
                     retransFlag,
                     gpsStatus, // gps定位状态
