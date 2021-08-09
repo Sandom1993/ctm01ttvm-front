@@ -33,7 +33,7 @@
 
                 <el-row :gutter="10">
                     <el-col :span="18">
-                        <p style="margin-top: 60px;margin-bottom: 15px;"><strong>白天疲劳驾驶参数：</strong></p>
+                        <p style="margin-top: 60px;margin-bottom: 15px;"><strong>白天驾驶超时参数：</strong></p>
                     </el-col>
                 </el-row>
               <el-row :gutter="10">
@@ -74,7 +74,7 @@
 
                 <el-row :gutter="10">
                     <el-col :span="18">
-                        <p style="margin-top:25px;margin-bottom: 15px;"><strong>夜间疲劳驾驶参数：</strong></p>
+                        <p style="margin-top:25px;margin-bottom: 15px;"><strong>夜间参数：</strong></p>
                     </el-col>
                 </el-row>
 
@@ -177,7 +177,7 @@ import {getVehicleDetail , terminalAbility} from "@/api/location";
 
 const now = new Date();
 
-// 疲劳驾驶
+// 驾驶超时
 export default {
   name: "FatigueDriving",
   components: {
@@ -282,7 +282,7 @@ export default {
               const param ={
                   method: 'SetRemoteConfigParameters',
                   moreParams: {
-                      type : 2, // type  1夜间禁行  2疲劳驾驶
+                      type : 2, // type  1夜间禁行  2驾驶超时
                       desc: this.param.desc
                   },
                   params: {

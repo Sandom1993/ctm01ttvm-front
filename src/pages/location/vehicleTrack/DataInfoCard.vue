@@ -10,7 +10,7 @@
       <span>{{ava}}<span>个</span></span>
       <span>有效个数</span>
     </div>
-    <div class="card unava">
+<!--    <div class="card unava">
       <img src="" alt="" />
       <span>{{unava}}<span>个</span></span>
       <span>无效个数</span>
@@ -29,6 +29,11 @@
       <img src="" alt="" />
       <span>{{pov}}</span>
       <span>数据有效率</span>
+    </div>-->
+      <div class="card mil">
+      <img src="" alt="" />
+      <span>{{mil}}<span>km</span></span>
+      <span>行驶里程数</span>
     </div>
   </div>
 </template>
@@ -57,8 +62,8 @@ export default {
       type: String,
       default: null,
     },
-    pov: {
-      type: String,
+    mil: {
+      type: Number,
       default: null,
     },
   }
@@ -69,7 +74,7 @@ export default {
   .data-card-container {
     background-color: white;;
     width: 422px;
-    height: 248px;
+    height: 128px;
     display: flex;
     // flex-direction: column;
     flex-wrap: wrap;
@@ -115,7 +120,7 @@ export default {
     .pot {
       background: #718FE8;
     }
-    .pov {
+    .mil {
       background: #EAC045;
     }
   }

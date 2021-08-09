@@ -158,6 +158,7 @@
                 :pop="status.correctRate"
                 :pot="status.integrityRate"
                 :pov="status.validRate"
+                :mil="status.mileage"
             ></data-info-card>
             <el-tabs
                 v-show="rightIsShow"
@@ -299,7 +300,8 @@ export default {
                 inValidTotal: 0,
                 correctRate: '0.0%',
                 integrityRate: '0.0%',
-                validRate: '0.0%'
+                validRate: '0.0%',
+                mileage: 0,
             },
             gpsTotalResult: [],
             alarmResult: [],
@@ -898,7 +900,7 @@ export default {
 
                 // 处理报警数据
                 this.$nextTick(() => {
-                    console.log(r)
+                    // console.log(r)
                     const alarmJson = r[1];
                     if (alarmJson.code === '0') {
                         if (alarmJson.data.list.length > 0) {
@@ -944,10 +946,17 @@ export default {
 
                 // 面板数据
                 this.$nextTick(() => {
+                    const milTotal = r[0].data;
+                    // console.log('第一个里程数：'+milTotal[0].mileage)
+                    // console.log('最后一个里程数：'+milTotal[milTotal.length-1].mileage)
                     const dashboardJson = r[2];
-                    if (dashboardJson.code === '0') {
-                        if (dashboardJson.data) {
+                    if (dashboardJson.code === '0' && r[0].code === '0') {
+                        if (dashboardJson.data && r[0].data) {
                             this.status = dashboardJson.data;
+                            const mileageRate =  milTotal[milTotal.length-1].mileage - milTotal[0].mileage ;
+                            // this.status.mileage = mileageRate; // 给数组添加元素
+                            this.status = Object.assign(dashboardJson.data, {"mileage": mileageRate ? mileageRate : 0}) ;
+                            // console.log(this.status)
                         } else {
                             this.$message({
                                 type: 'warning',
@@ -1507,13 +1516,14 @@ export default {
         height: 98%;
         display: flex;
         flex-direction: column;
-        padding: 8px;
+        padding: 8px 8px 0px 8px;
         overflow: hidden;
         width: 439px;
         transition: width 0.7s;
 
+        // update by chenying 2021.08.09
         .data-info-card {
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .tab-table {

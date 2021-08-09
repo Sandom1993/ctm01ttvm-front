@@ -462,8 +462,9 @@ export default {
             this.driverImg = gps.driverIndexCode
                 ? `/ctm01ttvm-web/resource/findDriverImage.do?driverIndexCode=${gps.driverIndexCode}&width=100&height=120`
                 : this.img1;
+            // 获取驾驶员考勤信息
             const attendanceDTO = await this.getDriverInfo(gps.vehicleIndexCode);
-            console.log(attendanceDTO)
+            // console.log(attendanceDTO)
 
             // 最近报警事件
             const lastAlarm = this.getVehicleAlarm(gps.vehicleIndexCode);

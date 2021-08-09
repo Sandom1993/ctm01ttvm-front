@@ -137,8 +137,9 @@
             </div>
           </el-tab-pane>
           <el-tab-pane name="third">
+            <!-- 2021.08.09 updata by chenying -->
             <tab-badge slot="label" :value="tiredAlarms.length">
-              疲劳驾驶
+                驾驶超时
             </tab-badge>
             <div>
               <div v-if="isRealtime" slot="left" style="height: 48px; line-height: 48px;">
