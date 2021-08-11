@@ -950,10 +950,30 @@ export default {
                     // console.log('第一个里程数：'+milTotal[0].mileage)
                     // console.log('最后一个里程数：'+milTotal[milTotal.length-1].mileage)
                     const dashboardJson = r[2];
+                    let beginMil;
+                    let endMil;
                     if (dashboardJson.code === '0' && r[0].code === '0') {
-                        if (dashboardJson.data && r[0].data) {
+                        if (dashboardJson.data) {
                             this.status = dashboardJson.data;
-                            const mileageRate =  milTotal[milTotal.length-1].mileage - milTotal[0].mileage ;
+                            // add by chenying 2021.08.10
+                            if (milTotal) {
+                                // milTotal ;
+                                for (let i = 0; i < milTotal.length; i++) {
+                                    if (milTotal[i].correctFlag === 0 && milTotal[i].longitude !== 0 && milTotal[i].latitude !== 0) {
+                                        beginMil = milTotal[i].mileage;
+                                        break;
+                                    }
+                                }
+
+                                // const reverseList = milTotal.reverse(); // 反转数组
+                                for (let v = milTotal.length-1; v < milTotal.length; v--) {
+                                    if (milTotal[v].correctFlag === 0 && milTotal[v].longitude !== 0 && milTotal[v].latitude !== 0) {
+                                        endMil = milTotal[v].mileage;
+                                        break;
+                                    }
+                                }
+                            }
+                            const mileageRate =  endMil - beginMil ;
                             // this.status.mileage = mileageRate; // 给数组添加元素
                             this.status = Object.assign(dashboardJson.data, {"mileage": mileageRate ? mileageRate : 0}) ;
                             // console.log(this.status)
