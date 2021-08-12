@@ -687,7 +687,7 @@ export default {
         },
         //  表格数据选择使能
         selectable(row, index) {
-            if (!row.isChecked && this.$route.query.approveStatus === '1') {
+            if (!row.isChecked && this.$route.query.approveStatus === '1' || row.eventType !== 132405 ) {
                 return false;
             }
             const bool =
@@ -955,6 +955,9 @@ export default {
             this.isError = false;
             this.isBatch = true;
             if (this.selectionRow.length > 0) {
+                this.selectionRow.forEach( item => {
+                    this.tempRow.eventType = item.eventType;
+                });
                 this.checkVisible = true;
             } else {
                 this.$msgbox({
