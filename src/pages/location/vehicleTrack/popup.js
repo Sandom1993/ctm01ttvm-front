@@ -37,9 +37,10 @@ export function popTraceContext(info) {
                     <ul class="control-box-center" style="display:block; padding-top:20px">
                         <li>
                             <span class="control-label">定位状态</span>
-                            <span id="deviceStatus" v-empty style="width:60px">${ info.gpsStatus === 1 ? '定位' : '未定位' || '' }</span>
+                            <span id="deviceStatus" v-empty style="width:60px"> ${ info.vehicleStatus % 2 === 0 ? '未定位' : '定位' || '' }</span>
                             <span class="control-label">ACC信息</span>
-                            <span id="m_ACC" v-empty style="width:80px">${info.acc % 2 === 0 ? 'ACC关闭' : 'ACC开启'}</span>
+                            <!-- update by chenying 2021.08.24 -->
+                            <span id="m_ACC" v-empty style="width:80px">${info.vehicleStatus % 2 === 0 ? 'ACC关闭' : 'ACC开启'}</span>
                         </li>
                         <li>
                             <span class="control-label">定位速度</span>

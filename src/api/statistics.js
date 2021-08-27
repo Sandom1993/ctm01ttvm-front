@@ -40,6 +40,14 @@ export function findVehicleOnlineInfoByVehicleIndexCodes(param) {
   });
 }
 
+// 查询组织下上线车辆详情
+export function getOrgOnlineVehicleDetail(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgOnlineVehicleDetail',
+        data: param
+    });
+}
+
 // 组织车辆在线统计
 export function pageQueryOnlineRate(param) {
   return http.post({
@@ -142,4 +150,21 @@ export function pageQueryOperation(param) {
     url: '/operation/pageQueryOperation',
     data: param
   });
+}
+
+/* ----------2021-08-23 新增接口---------- */
+// 分页查询组织下【停运】车辆详情列表（停运车辆数）
+export function pageOrgId(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgIdleVehicleDetail',
+        data: param
+    });
+}
+
+// 分页查询组织下车辆详情列表（总车辆数）
+export function pageOrgAll(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgleVehicleDetail',
+        data: param
+    });
 }

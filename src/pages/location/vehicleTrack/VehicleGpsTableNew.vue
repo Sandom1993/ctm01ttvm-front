@@ -79,7 +79,8 @@
                 </el-table-column>
                 <el-table-column prop="status" v-if="showData.includes('ACC')" label="ACC" :key="'ACC'">
                     <template slot-scope="scope">
-                        {{ scope.vehicleStatus % 2 === 0 ? '关' : '开' }}
+                        <!-- update by chenying 2021.08.24  -->
+                        {{ scope.row.vehicleStatus % 2 === 0 ? '关' : '开' }}
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="longitude" label="经度">
@@ -113,7 +114,7 @@ export default {
             default: () => []
         }
     },
-    methods: {
+  methods: {
         formatSpeed(value) {
             return alarmUtils.formatSpeed(value);
         },
