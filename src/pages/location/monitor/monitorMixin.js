@@ -75,7 +75,7 @@ export default {
             showVehicleTree: true,
             showVehicleDetail: false,
             detailvehicleIndexCode: '',
-            detailvehicleOrgName: ''
+            detailvehicleOrgName: '',
         };
     },
     computed: {
@@ -143,8 +143,8 @@ export default {
         setTimeout(() => {
             openSelectFeature(this.onFeatureSelect);
         }, 1000);
-        this.findAlarms();
-        this.findAlarmInterval = setInterval(this.findAlarms, ALARM_INTERVAL);
+        // this.findAlarms();
+        // this.findAlarmInterval = setInterval(this.findAlarms, ALARM_INTERVAL);
     },
     destroyed() {
         clearMap();
@@ -823,6 +823,21 @@ export default {
         },
         toggleVehicleTree() {
             this.showVehicleTree = !this.showVehicleTree;
-        }
+        },
+        showTabInfo() {
+
+            this.isShowTab = !this.isShowTab;
+            // console.log(this.);
+            if (this.isShowTab) {
+                this.findAlarms();
+                this.findAlarmInterval = setInterval(this.findAlarms, ALARM_INTERVAL);
+            } else {
+                // 清除定时器
+                if (this.findAlarmInterval) {
+                    clearInterval(this.findAlarmInterval);
+                }
+            }
+
+        },
     }
 };
