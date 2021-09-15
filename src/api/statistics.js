@@ -40,14 +40,6 @@ export function findVehicleOnlineInfoByVehicleIndexCodes(param) {
   });
 }
 
-// 查询组织下上线车辆详情
-export function getOrgOnlineVehicleDetail(param) {
-    return http.post({
-        url: '/statistic/all/pageOrgOnlineVehicleDetail',
-        data: param
-    });
-}
-
 // 组织车辆在线统计
 export function pageQueryOnlineRate(param) {
   return http.post({
@@ -124,7 +116,7 @@ export function getOrgAlarmCount(param) {
 export function getDayStatistic(param) {
   return http.post({
     url: '/statistic/all/dayStatistic',
-    params: param
+    data: param
   });
 }
 
@@ -132,7 +124,7 @@ export function getDayStatistic(param) {
 export function getMonthStatistic(param) {
   return http.post({
     url: '/statistic/all/monthStatistic',
-    params: param
+    data: param
   });
 }
 
@@ -140,7 +132,7 @@ export function getMonthStatistic(param) {
 export function saveRemark(param) {
   return http.post({
     url: '/statistic/all/saveRemark',
-    params: param
+    data: param
   });
 }
 
@@ -164,7 +156,39 @@ export function pageOrgId(param) {
 // 分页查询组织下车辆详情列表（总车辆数）
 export function pageOrgAll(param) {
     return http.post({
-        url: '/statistic/all/pageOrgleVehicleDetail',
+        url: '/statistic/all/pageOrgVehicleDetail',
+        data: param
+    });
+}
+
+// 查询组织下上线车辆详情
+export function getOrgOnlineVehicleDetail(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgOnlineVehicleDetail',
+        data: param
+    });
+}
+
+// 分页查询组织短信详情
+export function getOrgMessageDetail(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgBroadcastMessageDetail',
+        data: param
+    });
+}
+
+// 分页查询警情详情
+export function getOrgAlarms(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgAlarms',
+        data: param
+    });
+}
+
+// 未上线数
+export function getOrgOffVehicleDetail(param) {
+    return http.post({
+        url: '/statistic/all/pageOrgOffVehicleDetail',
         data: param
     });
 }

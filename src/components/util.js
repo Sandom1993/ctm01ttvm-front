@@ -72,6 +72,36 @@ export function toTimeNormalString(str) {
     .join(' ');
 }
 
+// 将“Wed Sep 01 2021 00:00:00 GMT 0800 (中国标准时间)”格式转为"2021-09-01"
+export function formatDate(str) {
+    var y = str.getFullYear();
+    var m = str.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    var d = str.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    // var h = date.getHours();
+    // var minute = date.getMinutes();
+    // minute = minute < 10 ? ('0' + minute) : minute;
+    // return y + '-' + m + '-' + d+' '+h+':'+minute;
+    return y + '/' + m + '/' + d;
+}
+
+// 将"Wed Sep 01 2021 00:00:00 GMT 0800 (中国标准时间)"格式转为时间戳
+export function dateToMs(str) {
+    let result = new Date(str).getTime();
+    return result;
+}
+
+export function msToDate(str) {
+    var time = new Date(str);
+    var y = time.getFullYear();
+    var m = time.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    var d = time.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    return y + '/' + m + '/' + d;
+}
+
 // 校验
 export const validate = {
   //

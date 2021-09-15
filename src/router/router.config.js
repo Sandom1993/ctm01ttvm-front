@@ -219,11 +219,34 @@ export default [
         path: '/statistics/platformOperateRecord',
         component: 'statistics/PlatformOperateRecord'
     },
-    // {
-    //   name: 'AlarmStatistic',
-    //   path: '/statistics/alarmStatistic',
-    //   component: 'statistics/AlarmStatistic'
-    // },
+
+    /* 8.25新增页面，日报表 */
+    {
+      name: 'OrgIdVehicleDetail',
+      path: '/statistics/orgIdVehicleDetail',
+      component: 'statistics/reportForms/OrgIdVehicleDetail'
+    },
+    {
+        name: 'OrgAllVehicleDetail',
+        path: '/statistics/orgAllVehicleDetail',
+        component: 'statistics/reportForms/OrgAllVehicleDetail'
+    },
+    {
+        name: 'VehicleDayOnline',
+        path: '/statistics/vehicleDayOnline',
+        component: 'statistics/reportForms/VehicleDayOnline'
+    },
+    {
+        name: 'AlarmCheckDetail',
+        path: '/statistics/alarmCheckDetail',
+        component: 'statistics/reportForms/AlarmCheckDetail'
+    },
+    {
+        name: 'MessageDetail',
+        path: '/statistics/messageDetail',
+        component: 'statistics/reportForms/MessageDetail'
+    },
+    /* ----------end--------- */
     {
         name: 'Company',
         path: '/config/company',
