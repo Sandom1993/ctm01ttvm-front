@@ -95,6 +95,11 @@
                                     class="h-icon-done"
                                     style="color: #2080F7;"
                                 ></i>
+                                <i
+                                    v-else
+                                    class="h-icon-close_sm"
+                                    style="color: #E72528;"
+                                ></i>
                             </template>
                         </el-table-column>
                     </el-table>
