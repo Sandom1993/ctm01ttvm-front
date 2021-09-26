@@ -14,7 +14,7 @@ const http = axios.create({
   timeout: 180000,
   withCredentials: true,
   headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': getToken() },
-  // headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': 'e2495142-dc53-43b7-b1cb-cb646b047457' },
+    // headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': '10b8d9e9-5af4-419a-9fed-8d3821eabe4f' },
   baseURL: `/${process.env.VUE_APP_CONTEXT}/` // 接口基本路径
 });
 

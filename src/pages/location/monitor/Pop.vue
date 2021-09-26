@@ -208,10 +208,14 @@
                 :style="{ display: option.isTracking ? 'none' : 'inline-block' }"
                 @click="option.track(option.vehicleIndexCode, option.titleHTML)"
             ></el-button>
+<!--            <el-button-->
+<!--                icon="h-icon-location"-->
+<!--                title="位置信息"-->
+<!--                @click="option.getVehicleLocation(option.deviceIndexCode)"-->
+<!--            ></el-button>-->
             <el-button
                 icon="h-icon-location"
                 title="位置信息"
-                @click="option.getVehicleLocation(option.deviceIndexCode)"
             ></el-button>
             <el-button
                 icon="rm-map-message-broadcast"

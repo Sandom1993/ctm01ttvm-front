@@ -840,6 +840,10 @@
             RULE_SPECIALPARAMS,
             { required: true, message: '不可为空', trigger: 'blur' }
           ],
+          organizingInstitution: [
+            RULE_SPECIALPARAMS,
+            { required: true, message: '不可为空', trigger: 'blur' }
+          ],
           phoneNumber: [
             RULE_PHONE2,
             { required: true, message: '不可为空', trigger: 'blur' }

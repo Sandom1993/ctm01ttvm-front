@@ -336,8 +336,60 @@ export default {
                 speed: this.getVehicleSpeed(item.vehicleIndexCode, item.speed),
                 time: this.getVehileTime(item.time),
                 orgName: this.getVehicleOrgName(item.orgName),
-                onlineStatus: vehicleInfoMap[item.vehicleIndexCode].status
+                onlineStatus: vehicleInfoMap[item.vehicleIndexCode].status,
             }));
+
+            data.map( itm =>{
+                // data.adderss = '';
+                getAddress(
+                    [Number(itm.longitude) / 360000, Number(itm.latitude) / 360000],
+                    null,
+                    address => {
+                        this.$set(itm, 'address', address);
+                    }
+                );
+                // console.log(data)
+            });
+            this.gpsMonitorData = data.map( it => ({
+                address: it.address,
+                speed: (it.speed).toString() ,
+                limitSpeed: it.limitSpeed,
+                latitude : this.getVehicleGPS(Number(it.latitude)),
+                longitude: this.getVehicleGPS(Number(it.longitude)),
+                time: this.getVehileTime(it.time),
+                vehicleLicensePlate: it.vehicleLicensePlate
+            }) )
+            // add by chenying 2021.09.24
+
+            // console.log(data)
+            // const param = data.map( item => {
+            //      return item.deviceIndexCode
+            // });
+            // const params = {
+            //     method: 'LocationQuery',
+            //     params: param
+            // }
+            // console.log(params)
+            // terminalAbility(params).then(res => {
+            //     if (res.code === '0') {
+            //         console.log(res)
+            //         // this.getVehiclePlate(itm)
+            //         const terminalData = res.data.data;
+            //         // terminalData.vehicleLicensePlate = itm.vehicleLicensePlate;
+            //         terminalData.address = '';
+            //         getAddress(
+            //             [Number(terminalData.longitude) / 360000, Number(terminalData.latitude) / 360000],
+            //             null,
+            //             address => {
+            //                 this.$set(terminalData, 'address', address);
+            //             }
+            //         );
+            //         terminalData.longitude = this.getVehicleGPS(Number(terminalData.longitude));
+            //         terminalData.latitude = this.getVehicleGPS(Number(terminalData.latitude));
+            //         terminalData.limitSpeed = terminalData.extraInfo ? terminalData.extraInfo.limitSpeed : null;
+            //     }
+            // });
+
             if (this.$refs.table) {
                 this.$refs.table.reload();
             }
@@ -394,11 +446,15 @@ export default {
         // 有离线设备的提示
         warnOffline(nodes) {
             if (nodes.length > 0) {
-                const arrName = nodes.map(item => item.vehicleLicensePlate);
+                const arrName = nodes.map(item => item.name); // 选中的车牌号
                 const arrNameStr =
                     arrName.length > 2
                         ? `${arrName[0]}、${arrName[1]}、${arrName[1]} 等 ${arrName.length} 个车辆`
                         : arrName.join('、');
+
+                // 清除定时器 add by chenying 2021.09.26
+                // clearInterval(this.timer);
+
                 this.$message({
                     message: `${arrNameStr}无定位信息!`,
                     type: 'warning'
@@ -626,6 +682,7 @@ export default {
             this.showVehicleDetail = true;
         },
         getVehicleLocation(deviceIndexCode, vehicleLicensePlate) {
+            // console.log(deviceIndexCode)
             const param = {
                 method: 'LocationQuery',
                 params: {
@@ -823,9 +880,9 @@ export default {
         },
         toggleVehicleTree() {
             this.showVehicleTree = !this.showVehicleTree;
+
         },
         showTabInfo() {
-
             this.isShowTab = !this.isShowTab;
             // console.log(this.);
             if (this.isShowTab) {

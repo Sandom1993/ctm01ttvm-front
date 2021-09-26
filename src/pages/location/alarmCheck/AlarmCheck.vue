@@ -621,16 +621,16 @@ export default {
                 this.alarmTypes = [...arr];
             }
         });
-        getAllAlarmTypes({type: 2}).then(json => {
-            if (json.code === '0') {
-                const arr = [];
-                json.data.forEach(item => {
-                    const obj = {value: item.eventType, label: item.name};
-                    arr.push(obj);
-                });
-                this.videoAlarmTypes = [...arr];
-            }
-        });
+        // getAllAlarmTypes({type: 2}).then(json => {
+        //     if (json.code === '0') {
+        //         const arr = [];
+        //         json.data.forEach(item => {
+        //             const obj = {value: item.eventType, label: item.name};
+        //             arr.push(obj);
+        //         });
+        //         this.videoAlarmTypes = [...arr];
+        //     }
+        // });
         this.handleQuery();
     },
     mounted() {
@@ -687,7 +687,11 @@ export default {
         },
         //  表格数据选择使能
         selectable(row, index) {
-            if (!row.isChecked && this.$route.query.approveStatus === '1' || row.eventType !== 132405 ) {
+            if (!row.isChecked &&
+                this.$route.query.approveStatus === '1'
+                || row.eventType !== 132405
+                && this.$route.query.type === '1'
+            ) {
                 return false;
             }
             const bool =

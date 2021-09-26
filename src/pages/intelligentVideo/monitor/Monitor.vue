@@ -44,11 +44,11 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <div class="arrow-wrap" @click="isShowTab = !isShowTab">
+        <div class="arrow-wrap"  @click="showTabInfo()">
             <i class="h-icon-angle_up"></i>
         </div>
         <div v-show="isShowTab" class="info-tab">
-            <el-tabs v-model="activeTab">
+            <el-tabs v-model="activeTab" @tab-click="handleClick">
                 <el-tab-pane v-if="false" name="first">
           <span slot="label" class="tab-label">
             实时定位
@@ -143,6 +143,7 @@
                         <location-monitor-alarm-table
                             ref="allAlarmTable"
                             :alarms="activityAlarms"
+                            v-loading="locationMoloading"
                             :table-height="180"
                             @deal-alarm="dealAlarm"
                         ></location-monitor-alarm-table>
@@ -160,6 +161,7 @@
                     ></alarm-level-summary>
                     <el-table
                         :data="riskEvents"
+                        v-loading="riskLoading"
                         class="alarm-table"
                         style="width: 100%"
                         height="180"
@@ -371,6 +373,9 @@ export default {
     ],
     data() {
         return {
+            locationMoloading: false,
+            riskLoading: false,
+
             activeTab: 'activeSecurity',
             isShowAlarmMultiMedia: false,
             alarmLedgerWidth: 840,
@@ -426,7 +431,7 @@ export default {
     mounted() {
         // TODO 暂时去掉风险事件
         // this.findRiskEvents();
-        this.riskInterval = setInterval(this.findRiskEvents, ALARM_INTERVAL);
+
     },
     destroyed() {
         if (this.riskInterval) {
@@ -435,8 +440,26 @@ export default {
     },
 
     methods: {
+        handleClick(tab) {
+            console.log(tab.name)
+            if (tab.name === 'fourth') {
+                this.findRiskEvents();
+                this.riskInterval = setInterval(this.findRiskEvents, ALARM_INTERVAL);
+
+                // 清除主动安全的定时器
+                if (this.findAlarmInterval) {
+                    clearInterval(this.findAlarmInterval);
+                }
+            } else {
+                // 清除定时器
+                if (this.riskInterval) {
+                    clearInterval(this.findAlarmInterval);
+                }
+            }
+        },
         // 查询最近一段时间的报警
         findAlarms() {
+            this.locationMoloading = true;
             const label = {
                 component: process.env.VUE_APP_COMPONENT_ID,
                 includeNull: true,
@@ -477,9 +500,13 @@ export default {
                         return item;
                     });
                 }
+                this.locationMoloading = false;
+            }).catch( () => {
+                this.locationMoloading = false;
             });
         },
         findRiskEvents() {
+            this.riskLoading = true;
             const endTime = new Date();
             auditLedgerQuery({
                 beginTime: toTimezoneString(endTime.getTime() - 60 * 60 * 1000),
@@ -528,6 +555,9 @@ export default {
                     });
                     this.riskEvents = riskEvents;
                 }
+                this.riskLoading =false;
+            }).catch(() => {
+                this.riskLoading =false;
             });
         },
 

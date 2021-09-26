@@ -82,7 +82,7 @@ const main = {
                 onProxyReq(proxyReq, req, res) {
                     proxyReq.setHeader(
                         'Cookie',
-                        'JSESSIONID=X6i0nzasmhjz6QReFjh2Y_T8a9nHa79Ag2Kb11sW; portal_locale_cookie=zh-cn; csrfToken=qpfZI4ldeF8guAXOAbfsMuHt; CASTGC=TGT-323-66xgLvJTfk3h6oOnBGMM96dTxbwVe4v0e1RdtaBXaMj2P6cEph-cas; portal_sess=Gdd8AjbBDltuBU-pE5e8z1ZHO8lt9__40thJXElm-HLToIqOFJ3h6vodfU9HvHRV'
+                        'JSESSIONID=voUllhU7r2fCBRk9X91-Nvq-iY7v0nkZ5TXWiOQS; portal_locale_cookie=zh-cn; csrfToken=WmeL5mZdDgwMGfrYZ-hQnUqs; xfronthik_sess=qTVtuX-zI-vrtVERtV0TB4aTM8z8VqlgeLNm_9XxHJgNkYa19ySi_zfGig4HSdE6; CASTGC=TGT-137-VjGJVeG3csNQ7IeHsF6gVXTlqHat3z0bYaq26ORfsokFkUBMdf-cas; portal_sess=-xfm67jk5hpif0x67k2KZdJ5Hd9wJscZ4_zB2xc4Vzy05ACZYdT2kLGIn-Wwk6g0'
                     )
                 }
             },
