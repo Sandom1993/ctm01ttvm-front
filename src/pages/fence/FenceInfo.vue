@@ -381,7 +381,7 @@ export default {
       checkedDays: [],
       isIndeterminate: false,
       dialogVisible: false,
-      pageTotal: 1,
+      pageTotal: 0,
       pageSize: 20,
       currentPage: 1,
       csrfToken: {}
@@ -487,7 +487,7 @@ export default {
     },
     reset() {
       this.form = {
-        type: '',
+        type: '区域围栏',
         name: ''
         // alarmType: ''
       };
@@ -495,6 +495,7 @@ export default {
     },
     typeChange() {
       this.tableData = [];
+      this.pageTotal = 0;
     },
     // spanMethod ({ row, column, rowIndex, columnIndex }) {
     //   // 只对第0 + 1行进行合并

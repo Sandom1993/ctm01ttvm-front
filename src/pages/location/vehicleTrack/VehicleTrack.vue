@@ -1553,7 +1553,8 @@ export default {
 
         .pannel-wrap {
             display: flex;
-            height: 100%;
+            // update by chenying 2021-09-27
+            height: 50% !important;
             flex: 1;
             flex-direction: column;
         }
@@ -1683,7 +1684,7 @@ export default {
     }
 
     .el-tab-pane {
-        height: 92%;
+        height: 94%;
     }
 }
 
