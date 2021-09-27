@@ -797,7 +797,7 @@ export default {
             }
             const approveStatus = {
                 '0': '系统核警',
-                '1': '人工核警',
+                '1': '已初审',
                 '2': '已复核',
                 '-1': '待审核'
             };
@@ -1000,7 +1000,11 @@ export default {
                         ]
                     };
                     if (this.checkForm.radio === '0') {
-                        const tempVal = findIndexObject(this.options, ['label', this.checkForm.remark]).value === 0 ? 20 : 21;
+                        let tempVal = 0;
+                        // console.log(this.tempRow.eventType)
+                        if (this.tempRow.eventType === 132405) {
+                            tempVal = findIndexObject(this.options, ['label', this.checkForm.remark]).value === 0 ? 20 : 21;
+                        }
                         params.labels.push({key: 'ruleNo', value: String(tempVal)});
                     }
                     paramArr.push(params);
