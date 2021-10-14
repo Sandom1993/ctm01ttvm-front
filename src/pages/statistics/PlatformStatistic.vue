@@ -648,7 +648,7 @@ now.setMilliseconds(0);
 
 // const endTime = now.getTime() + 24 * 60 * 60 * 1000 - 1;
 const endTime = now.getTime() - 1; // update by chenying 2021.06.03
-const defaultDate = (now.getFullYear()) + '/' + ((now.getMonth() + 1) > 10 ? (now.getMonth() + 1) : '0' + (now.getMonth() + 1)) + '/' + ((now.getDate() - 1) < 10 ? ('0' + (now.getDate() - 1)) : (now.getDate() - 1));
+const defaultDate = (now.getFullYear()) + '/' + (((now.getMonth() + 1) >= 10) ? (now.getMonth() + 1) : '0' + (now.getMonth() + 1)) + '/' + (((now.getDate() - 1) < 10) ? ('0' + (now.getDate() - 1)) : (now.getDate() - 1));
 // console.log(defaultDate)
 
 export default {

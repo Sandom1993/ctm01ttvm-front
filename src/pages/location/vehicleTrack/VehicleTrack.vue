@@ -920,7 +920,7 @@ export default {
                                         i['time'] = n.time;
                                         i['serverTime'] = n.serverTime;
                                         i['satellites'] = n.satellites;
-                                        i['mileage'] = n.mileage;
+                                        i['mileage'] = n.mileAge;
                                         i['shapeLimitSpeed'] = n.shapeLimitSpeed;
                                         i['shapeName'] = n.shapeName;
                                         i['attendanceDTO'] = n.attendanceDTO;
@@ -955,20 +955,30 @@ export default {
                     if (dashboardJson.code === '0' && r[0].code === '0') {
                         if (dashboardJson.data) {
                             this.status = dashboardJson.data;
-                            // add by chenying 2021.08.10
+                            // add by chenying 2021.10.14
                             if (milTotal) {
                                 // milTotal ;
                                 for (let i = 0; i < milTotal.length; i++) {
-                                    if (milTotal[i].correctFlag === 0 && milTotal[i].longitude !== 0 && milTotal[i].latitude !== 0) {
-                                        beginMil = milTotal[i].mileage;
+                                    if (
+                                        milTotal[i].correctFlag === 0 &&
+                                        milTotal[i].longitude !== 0 &&
+                                        milTotal[i].latitude !== 0 &&
+                                        milTotal[i].mileAge !== 0
+                                    ) {
+                                        beginMil = milTotal[i].mileAge;
                                         break;
                                     }
                                 }
 
                                 // const reverseList = milTotal.reverse(); // 反转数组
                                 for (let v = milTotal.length-1; v < milTotal.length; v--) {
-                                    if (milTotal[v].correctFlag === 0 && milTotal[v].longitude !== 0 && milTotal[v].latitude !== 0) {
-                                        endMil = milTotal[v].mileage;
+                                    if (
+                                        milTotal[v].correctFlag === 0 &&
+                                        milTotal[v].longitude !== 0 &&
+                                        milTotal[v].latitude !== 0 &&
+                                        milTotal[v].mileAge !== 0
+                                    ) {
+                                        endMil = milTotal[v].mileAge;
                                         break;
                                     }
                                 }

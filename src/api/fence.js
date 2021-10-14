@@ -22,8 +22,10 @@ export function findFence (param) {
 }
 
 export function deleteFenceInfo (param) {
+  //  update by chenying 2021.10.13
   return http.post({
-    url: '/fence/deleteFenceInfo',
+    // url: '/fence/deleteFenceInfo',
+    url: '/fence/updateVehicleFenceInfo',
     data: param
   })
 }

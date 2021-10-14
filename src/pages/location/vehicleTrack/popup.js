@@ -54,7 +54,7 @@ export function popTraceContext(info) {
                             <span class="control-label">搜星数</span>
                             <span id="retransFlag" v-empty style="width:60px">${ info.satellites || '' }</span>
                             <span class="control-label">里程数</span>
-                            <span id="licheng" v-empty style="width:60px">${ info.mileage || '' }</span>
+                            <span id="licheng" v-empty style="width:60px">${ info.mileAge || '' }</span>
                         </li>
                         <li>
                             <span class="control-label">经纬度</span>
@@ -187,7 +187,7 @@ export function popAlarmContext(info) {
                                 <span class="control-label">搜星数</span>
                                 <span id="retransFlag" v-empty style="width:60px">${ info.satellites || '' }</span>
                                 <span class="control-label">里程数</span>
-                                <span id="licheng" v-empty style="width:60px">${ info.mileage || '' }</span>
+                                <span id="licheng" v-empty style="width:60px">${ info.mileAge || '' }</span>
                             </li>
                             <li>
                                 <span class="control-label">经纬度</span>

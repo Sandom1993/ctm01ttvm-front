@@ -575,7 +575,7 @@ export default {
                     gpsStatus, // gps定位状态
                     speed,
                     lotgut, // 经纬度
-                    mileage : gps.mileage || '', // 里程数
+                    mileage : gps.mileAge || '', // 里程数
                     satellites :gps.satellites || '', // 搜星数
                     limitSpeed,
                     lastLocationTime,

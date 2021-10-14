@@ -22,7 +22,7 @@
                         <span class="control-label">搜星数</span>
                         <span id="retransFlag" v-empty style="width:60px">{{ option.satellites }}</span>
                         <span class="control-label">里程数</span>
-                        <span id="licheng" v-empty style="width:60px">{{ option.mileage }}</span>
+                        <span id="licheng" v-empty style="width:60px">{{ option.mileAge }}</span>
                     </li>
                     <li>
                         <span class="control-label">经纬度</span>
