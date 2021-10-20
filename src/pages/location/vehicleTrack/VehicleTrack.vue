@@ -971,7 +971,7 @@ export default {
                                 }
 
                                 // const reverseList = milTotal.reverse(); // 反转数组
-                                for (let v = milTotal.length-1; v < milTotal.length; v--) {
+                                for (let v = milTotal.length-1; v >= 0; v--) {
                                     if (
                                         milTotal[v].correctFlag === 0 &&
                                         milTotal[v].longitude !== 0 &&
