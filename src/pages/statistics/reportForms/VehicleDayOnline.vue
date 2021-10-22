@@ -216,9 +216,9 @@ export default {
                 orgIndexCode: this.orgIndexCode,
                 orgName: this.orgName,
             };
+            this.loading = true;
             if (this.$route.query.type === '1') {
                 // 上线车辆
-                this.loading = true;
                 getOrgOnlineVehicleDetail(params).then( res => {
                     if (res.code === '0' && res.data !== null ) {
                         this.tableData = res.data;
@@ -227,17 +227,15 @@ export default {
                         } else {
                             this.days = [];
                         }
-                        this.loading = false;
                     } else {
                         this.tableData = [];
-                        this.loading = false;
                     }
+                    this.loading = false;
                 }).catch( ()=> {
                     this.loading = false;
                 });
             } else if (this.$route.query.type === '2') {
                 // 未上线车辆
-                this.loading = true;
                 getOrgOffVehicleDetail(params).then( res => {
                     if (res.code === '0' && res.data !==null ) {
                         this.tableData = res.data;
@@ -246,11 +244,10 @@ export default {
                         } else {
                             this.days = [];
                         }
-                        this.loading = false;
                     } else {
                         this.tableData = [];
-                        this.loading = false;
                     }
+                    this.loading = false;
                 }).catch( ()=> {
                     this.loading = false;
                 });

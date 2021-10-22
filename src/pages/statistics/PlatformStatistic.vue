@@ -724,7 +724,7 @@ export default {
             window.top.goToApp({
                 url: '/ctm01ttvm-web/#/statistics/orgIdVehicleDetail',
                 name: '停运车辆',
-                param: `orgIndexCode=${row.orgIndexCode}&orgName=${row.orgName}&dayDate=${this.dayDate}`
+                param: `orgIndexCode=${row.orgIndexCode}&orgName=${row.orgName}&beginTime=${msToDate(this.dayDate)}&endTime=${msToDate(this.dayDate)}`
             });
         },
         handleOutageAllVehicle(index, row) {

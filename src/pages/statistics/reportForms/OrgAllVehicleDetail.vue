@@ -81,7 +81,6 @@ export default {
             pageSize: 30,
             total: 0,
 
-            loading: false,
             tableLoading: false,
 
             orgIndexCode: '',
@@ -153,7 +152,6 @@ export default {
                 return;
             }
             this.tableLoading = true;
-            this.loading = true;
 
             const params = {
                 pageNo: this.pageNo,
@@ -169,11 +167,12 @@ export default {
                 if (res.code === '0') {
                     this.total = res.data.total;
                     this.tableData = res.data.list;
-                }
-            });
 
-            this.tableLoading = false;
-            this.loading = false;
+                    this.tableLoading = false;
+                }
+            }).catch( () => {
+                this.tableLoading = false;
+            });
         },
 
         onSizeChange(pageSize) {

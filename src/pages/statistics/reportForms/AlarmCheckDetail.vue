@@ -455,7 +455,6 @@ export default {
             if (!this.checkParams()) {
                 return;
             }
-            this.loading = true;
             let params = {};
             if (this.$route.query.type === 'count') {
                 params = {
@@ -488,7 +487,7 @@ export default {
                         labels:[[{key:"approveStatus",value:"-1"}],[{key:"approveStatus",value:"1"}],[{key:"approveStatus",value:"2"}]]}
                 };
             }
-
+            this.loading = true;
             getOrgAlarms(params).then( res => {
                 if (res.code === '0') {
                     this.total = res.data.total;
@@ -513,8 +512,6 @@ export default {
                         return item;
                     });
                     this.tableRowClassName();// 设置颜色
-                    this.loading = false;
-                } else {
                     this.loading = false;
                 }
             }).catch(() => {

@@ -94,7 +94,6 @@ export default {
             pageSize: 30,
             total: 0,
 
-            loading: false,
             tableLoading: false,
 
             orgIndexCode: '',
@@ -129,7 +128,7 @@ export default {
 
         // 路由跳转相关参数获取及设置
         // 初始化默认选中节点
-        const {orgIndexCode, orgName, dayDate} = this.$route.query;
+        const {orgIndexCode, orgName, beginTime, endTime } = this.$route.query;
 
         const orgObj = {
             orgIndexCode: orgIndexCode,
@@ -140,8 +139,8 @@ export default {
         this.$nextTick(() => {
             this.orgIndexCode = orgIndexCode;
             this.orgName = orgName;
-            this.dateRange = [dateToMs(dayDate), dateToMs(dayDate)];
-            this.dateDefault = [dayDate, dayDate]
+            this.dateRange = [dateToMs(beginTime), dateToMs(endTime)];
+            this.dateDefault = [beginTime, endTime];
             this.handleQuery();
         })
     },
@@ -165,7 +164,6 @@ export default {
                 return;
             }
             this.tableLoading = true;
-            this.loading = true;
 
             const params = {
                 pageNo: this.pageNo,
@@ -182,11 +180,12 @@ export default {
                 if (res.code === '0') {
                     this.total = res.data.total;
                     this.tableData = res.data.list;
-                }
-            });
 
-            this.tableLoading = false;
-            this.loading = false;
+                    this.tableLoading = false;
+                }
+            }).catch(() => {
+                this.tableLoading = false;
+            });
         },
 
         onSizeChange(pageSize) {

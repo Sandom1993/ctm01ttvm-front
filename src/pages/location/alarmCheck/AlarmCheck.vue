@@ -435,41 +435,41 @@
                     @on-media-close="mediaFilesVisible = false"
                 />
             </div>
-            <el-dialog
-                title="导出"
-                :visible.sync="exportDialogVisible"
-                :area="480"
-                top="middle"
-                class="export-dialog"
-            >
-                <div style="display: flex; align-items: center;justify-content: center">
-                    <div>
-                        从第
-                        <el-input-number
-                            v-model="exportStartPage"
-                            :min="1"
-                            :max="maxExportPage"
-                        ></el-input-number>
-                        页
-                    </div>
-                    <div style="margin:0 10px;">到</div>
-                    <div>
-                        第
-                        <el-input-number
-                            v-model="exportEndPage"
-                            :min="1"
-                            :max="maxExportPage"
-                        ></el-input-number>
-                        页
-                    </div>
-                </div>
-                <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportAlarm">
-            确 定
-          </el-button>
-          <el-button @click="exportDialogVisible = false">取 消</el-button>
-        </span>
-            </el-dialog>
+<!--            <el-dialog-->
+<!--                title="导出"-->
+<!--                :visible.sync="exportDialogVisible"-->
+<!--                :area="480"-->
+<!--                top="middle"-->
+<!--                class="export-dialog"-->
+<!--            >-->
+<!--                <div style="display: flex; align-items: center;justify-content: center">-->
+<!--                    <div>-->
+<!--                        从第-->
+<!--                        <el-input-number-->
+<!--                            v-model="exportStartPage"-->
+<!--                            :min="1"-->
+<!--                            :max="maxExportPage"-->
+<!--                        ></el-input-number>-->
+<!--                        页-->
+<!--                    </div>-->
+<!--                    <div style="margin:0 10px;">到</div>-->
+<!--                    <div>-->
+<!--                        第-->
+<!--                        <el-input-number-->
+<!--                            v-model="exportEndPage"-->
+<!--                            :min="1"-->
+<!--                            :max="maxExportPage"-->
+<!--                        ></el-input-number>-->
+<!--                        页-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <span slot="footer" class="dialog-footer">-->
+<!--          <el-button type="primary" @click="exportAlarm">-->
+<!--            确 定-->
+<!--          </el-button>-->
+<!--          <el-button @click="exportDialogVisible = false">取 消</el-button>-->
+<!--        </span>-->
+<!--            </el-dialog>-->
         </h-layout>
     </h-page-container>
 </template>

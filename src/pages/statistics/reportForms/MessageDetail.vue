@@ -188,8 +188,10 @@ export default {
                     }
                 }
                 this.loading = false;
+            }).catch(()=> {
+                this.loading = false;
             });
-            this.loading = false;
+
         },
         resize() {
             this.tableHeight = this.$refs.pageBox.clientHeight ;
