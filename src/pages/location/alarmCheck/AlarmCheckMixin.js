@@ -32,7 +32,8 @@ export default {
                 return;
             }
             this.exportStartPage = 1;
-            this.exportEndPage = Math.floor(this.total / this.pageSize);
+            // 向上取整
+            this.exportEndPage = Math.ceil(this.total / this.pageSize);
             // if (this.exportStartPage > this.exportEndPage) {
             //   this.$message.warning('导出开始页数不能大于结束页数');
             //   return;
