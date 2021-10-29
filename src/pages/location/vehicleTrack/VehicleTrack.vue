@@ -849,23 +849,15 @@ export default {
                 ruleTypes: [122, 123],
                 vehicleIndexCode: this.selectedDevices[0].indexCode
             };
-            const gpsPromise = gethistoryGps(param);
-            const alarmPromise = findAlarmPage(alarmparam);
-            const dashboardPromise = queryVehicleStatus(param);
-            const fenceSpeedLimitPromise = findFenceByVehicle(fenceSpeedLimitParam);
-            const fenceAreaLimitPromise = findFenceByVehicle(fenceAreaLimitParam);
-            Promise.all([
-                gpsPromise,
-                alarmPromise,
-                dashboardPromise,
-                fenceSpeedLimitPromise,
-                fenceAreaLimitPromise
-            ]).then(r => {
-                // 处理gps响应结果
-                const gpsJson = r[0];
-                if (gpsJson.code === '0') {
+
+            // update by chenying 2021.10.28
+            gethistoryGps(param).then( gpsJson => {
+                if(gpsJson.code === '0'){
                     if (gpsJson.data.length > 0) {
                         this.gpsTotalResult = gpsJson.data;
+
+                        const milTotal = gpsJson.data;
+
                         this.progressTimeRange = [
                             new Date(this.gpsTotalResult[0].time).toTimeString().substr(0, 8),
                             new Date(this.gpsTotalResult[this.gpsTotalResult.length - 1].time)
@@ -882,6 +874,196 @@ export default {
                         );
                         this.isShowTab = true;
                         this.upDateEchart();
+
+                        // 继续请求其他接口
+                        // const gpsPromise = gethistoryGps(param);
+                        const alarmPromise = findAlarmPage(alarmparam);
+                        const dashboardPromise = queryVehicleStatus(param);
+                        const fenceSpeedLimitPromise = findFenceByVehicle(fenceSpeedLimitParam);
+                        const fenceAreaLimitPromise = findFenceByVehicle(fenceAreaLimitParam);
+                        Promise.all([
+                            alarmPromise,
+                            dashboardPromise,
+                            fenceSpeedLimitPromise,
+                            fenceAreaLimitPromise
+                        ]).then(r => {
+                            // 处理报警数据
+                            this.$nextTick(() => {
+                                // console.log(r)
+                                const alarmJson = r[0];
+                                if (alarmJson.code === '0') {
+                                    if (alarmJson.data.list.length > 0) {
+                                        const alarm = alarmJson.data.list;
+                                        //
+                                        // console.log(alarmJson.data.list)
+                                        // console.log(this.gpsTotalResult)
+
+                                        alarm.forEach( i => {
+                                            this.gpsTotalResult.forEach( n => {
+                                                if(i.beginTime === n.time &&
+                                                    i.beginLatitude === n.latitude &&
+                                                    i.beginLongitude === n.longitude
+                                                ){
+                                                    // console.log(n.ibmData);
+                                                    i['ibmData'] = n.ibmData;
+                                                    i['time'] = n.time;
+                                                    i['serverTime'] = n.serverTime;
+                                                    i['satellites'] = n.satellites;
+                                                    i['mileage'] = n.mileAge;
+                                                    i['shapeLimitSpeed'] = n.shapeLimitSpeed;
+                                                    i['shapeName'] = n.shapeName;
+                                                    i['attendanceDTO'] = n.attendanceDTO;
+                                                }
+                                            })
+                                        })
+                                        // console.log(alarm)
+                                        this.alarmResult = alarm;
+
+                                        // this.isShow = false;
+                                    } else {
+                                        this.alarmResult = [];
+                                        this.$message({
+                                            type: 'warning',
+                                            message: '无相关报警信息'
+                                        });
+                                    }
+                                } else {
+                                    this.$message.error('获取报警信息异常');
+                                }
+                                this.showTrack();
+                            });
+
+                            // 面板数据
+                            this.$nextTick(() => {
+                                // const milTotal = r[0].data;
+                                // console.log('第一个里程数：'+milTotal[0].mileage)
+                                // console.log('最后一个里程数：'+milTotal[milTotal.length-1].mileage)
+                                const dashboardJson = r[1];
+                                let beginMil;
+                                let endMil;
+                                if (dashboardJson.code === '0' && r[0].code === '0') {
+                                    if (dashboardJson.data) {
+                                        this.status = dashboardJson.data;
+                                        // add by chenying 2021.10.14
+                                        if (milTotal) {
+                                            // milTotal ;
+                                            for (let i = 0; i < milTotal.length; i++) {
+                                                if (
+                                                    milTotal[i].correctFlag === 0 &&
+                                                    milTotal[i].longitude !== 0 &&
+                                                    milTotal[i].latitude !== 0 &&
+                                                    milTotal[i].mileAge !== 0
+                                                ) {
+                                                    beginMil = milTotal[i].mileAge;
+                                                    break;
+                                                }
+                                            }
+
+                                            // const reverseList = milTotal.reverse(); // 反转数组
+                                            for (let v = milTotal.length-1; v >= 0; v--) {
+                                                if (
+                                                    milTotal[v].correctFlag === 0 &&
+                                                    milTotal[v].longitude !== 0 &&
+                                                    milTotal[v].latitude !== 0 &&
+                                                    milTotal[v].mileAge !== 0
+                                                ) {
+                                                    endMil = milTotal[v].mileAge;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        const mileageRate =  endMil - beginMil ;
+                                        // this.status.mileage = mileageRate; // 给数组添加元素
+                                        this.status = Object.assign(dashboardJson.data, {"mileage": mileageRate ? mileageRate : 0}) ;
+                                        // console.log(this.status)
+                                    } else {
+                                        this.$message({
+                                            type: 'warning',
+                                            message: '无相关统计信息'
+                                        });
+                                    }
+                                } else {
+                                    this.$message('获取面板信息异常');
+                                }
+                                this.$refs.trackConfig.initMenuList();
+                            });
+                            this.loading = false;
+                            // 限速区域
+                            this.$nextTick(() => {
+                                this.fenceSpeedLimitLayer.removeAllFeatures();
+                                const fenceSpeedLimitJson = r[2];
+                                if (fenceSpeedLimitJson.code === '0') {
+                                    fenceSpeedLimitJson.data.list.forEach(item => {
+                                        // 圆形围栏
+                                        hidFence(this.fenceSpeedLimitLayer);
+                                        if (item.shapeType === 1) {
+                                            drawCircleFence(
+                                                this.map,
+                                                this.fenceSpeedLimitLayer,
+                                                item.points[0],
+                                                item.radius,
+                                                1,
+                                                {
+                                                    name: item.shapeName,
+                                                    type: item.ruleList[0].ruleType,
+                                                    speed: item.ruleList[0].rule.speed
+                                                }
+                                            );
+                                        } else {
+                                            // 多边形或矩形围栏
+                                            drawGeoFence(this.fenceSpeedLimitLayer, item.points, 1, {
+                                                name: item.shapeName,
+                                                type: item.ruleList[0].ruleType,
+                                                speed: item.ruleList[0].rule.speed
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    this.$message({
+                                        type: 'warning',
+                                        message: '无相关限速区域围栏'
+                                    });
+                                }
+                            });
+
+                            // 越线区域
+                            this.$nextTick(() => {
+                                this.fenceAreaLimitLayer.removeAllFeatures();
+                                const fenceAreaLimitJson = r[3];
+                                if (fenceAreaLimitJson.code === '0') {
+                                    fenceAreaLimitJson.data.list.forEach(item => {
+                                        // 圆形围栏
+                                        hidFence(this.fenceAreaLimitLayer);
+                                        if (item.shapeType === 1) {
+                                            drawCircleFence(
+                                                this.map,
+                                                this.fenceAreaLimitLayer,
+                                                item.points[0],
+                                                item.radius,
+                                                2,
+                                                {
+                                                    name: item.shapeName,
+                                                    type: item.ruleList[0].ruleType,
+                                                    speed: item.ruleList[0].rule.speed
+                                                }
+                                            );
+                                        } else {
+                                            // 多边形或矩形围栏
+                                            drawGeoFence(this.fenceAreaLimitLayer, item.points, 2, {
+                                                name: item.shapeName,
+                                                type: item.ruleList[0].ruleType,
+                                                speed: item.ruleList[0].rule.speed
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    this.$message({
+                                        type: 'warning',
+                                        message: '无相关越线区域围栏'
+                                    });
+                                }
+                            });
+                        });
                     } else {
                         this.$message({
                             type: 'warning',
@@ -897,190 +1079,235 @@ export default {
                     this.loading = false;
                     return;
                 }
+            })
 
-                // 处理报警数据
-                this.$nextTick(() => {
-                    // console.log(r)
-                    const alarmJson = r[1];
-                    if (alarmJson.code === '0') {
-                        if (alarmJson.data.list.length > 0) {
-                            const alarm = alarmJson.data.list;
-                            //
-                            // console.log(alarmJson.data.list)
-                            // console.log(this.gpsTotalResult)
-
-                            alarm.forEach( i => {
-                                this.gpsTotalResult.forEach( n => {
-                                    if(i.beginTime === n.time &&
-                                        i.beginLatitude === n.latitude &&
-                                        i.beginLongitude === n.longitude
-                                    ){
-                                        // console.log(n.ibmData);
-                                        i['ibmData'] = n.ibmData;
-                                        i['time'] = n.time;
-                                        i['serverTime'] = n.serverTime;
-                                        i['satellites'] = n.satellites;
-                                        i['mileage'] = n.mileAge;
-                                        i['shapeLimitSpeed'] = n.shapeLimitSpeed;
-                                        i['shapeName'] = n.shapeName;
-                                        i['attendanceDTO'] = n.attendanceDTO;
-                                    }
-                                })
-                            })
-                            // console.log(alarm)
-                            this.alarmResult = alarm;
-
-                            // this.isShow = false;
-                        } else {
-                            this.alarmResult = [];
-                            this.$message({
-                                type: 'warning',
-                                message: '无相关报警信息'
-                            });
-                        }
-                    } else {
-                        this.$message.error('获取报警信息异常');
-                    }
-                    this.showTrack();
-                });
-
-                // 面板数据
-                this.$nextTick(() => {
-                    const milTotal = r[0].data;
-                    // console.log('第一个里程数：'+milTotal[0].mileage)
-                    // console.log('最后一个里程数：'+milTotal[milTotal.length-1].mileage)
-                    const dashboardJson = r[2];
-                    let beginMil;
-                    let endMil;
-                    if (dashboardJson.code === '0' && r[0].code === '0') {
-                        if (dashboardJson.data) {
-                            this.status = dashboardJson.data;
-                            // add by chenying 2021.10.14
-                            if (milTotal) {
-                                // milTotal ;
-                                for (let i = 0; i < milTotal.length; i++) {
-                                    if (
-                                        milTotal[i].correctFlag === 0 &&
-                                        milTotal[i].longitude !== 0 &&
-                                        milTotal[i].latitude !== 0 &&
-                                        milTotal[i].mileAge !== 0
-                                    ) {
-                                        beginMil = milTotal[i].mileAge;
-                                        break;
-                                    }
-                                }
-
-                                // const reverseList = milTotal.reverse(); // 反转数组
-                                for (let v = milTotal.length-1; v >= 0; v--) {
-                                    if (
-                                        milTotal[v].correctFlag === 0 &&
-                                        milTotal[v].longitude !== 0 &&
-                                        milTotal[v].latitude !== 0 &&
-                                        milTotal[v].mileAge !== 0
-                                    ) {
-                                        endMil = milTotal[v].mileAge;
-                                        break;
-                                    }
-                                }
-                            }
-                            const mileageRate =  endMil - beginMil ;
-                            // this.status.mileage = mileageRate; // 给数组添加元素
-                            this.status = Object.assign(dashboardJson.data, {"mileage": mileageRate ? mileageRate : 0}) ;
-                            // console.log(this.status)
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: '无相关统计信息'
-                            });
-                        }
-                    } else {
-                        this.$message('获取面板信息异常');
-                    }
-                    this.$refs.trackConfig.initMenuList();
-                });
-                this.loading = false;
-                // 限速区域
-                this.$nextTick(() => {
-                    if (r[0].code !== '0' || !r[0].data.length) {
-                        return;
-                    }
-                    this.fenceSpeedLimitLayer.removeAllFeatures();
-                    const fenceSpeedLimitJson = r[3];
-                    if (fenceSpeedLimitJson.code === '0') {
-                        fenceSpeedLimitJson.data.list.forEach(item => {
-                            // 圆形围栏
-                            hidFence(this.fenceSpeedLimitLayer);
-                            if (item.shapeType === 1) {
-                                drawCircleFence(
-                                    this.map,
-                                    this.fenceSpeedLimitLayer,
-                                    item.points[0],
-                                    item.radius,
-                                    1,
-                                    {
-                                        name: item.shapeName,
-                                        type: item.ruleList[0].ruleType,
-                                        speed: item.ruleList[0].rule.speed
-                                    }
-                                );
-                            } else {
-                                // 多边形或矩形围栏
-                                drawGeoFence(this.fenceSpeedLimitLayer, item.points, 1, {
-                                    name: item.shapeName,
-                                    type: item.ruleList[0].ruleType,
-                                    speed: item.ruleList[0].rule.speed
-                                });
-                            }
-                        });
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: '无相关限速区域围栏'
-                        });
-                    }
-                });
-
-                // 越线区域
-                this.$nextTick(() => {
-                    if (r[0].code !== '0' || !r[0].data.length) {
-                        return;
-                    }
-                    this.fenceAreaLimitLayer.removeAllFeatures();
-                    const fenceAreaLimitJson = r[4];
-                    if (fenceAreaLimitJson.code === '0') {
-                        fenceAreaLimitJson.data.list.forEach(item => {
-                            // 圆形围栏
-                            hidFence(this.fenceAreaLimitLayer);
-                            if (item.shapeType === 1) {
-                                drawCircleFence(
-                                    this.map,
-                                    this.fenceAreaLimitLayer,
-                                    item.points[0],
-                                    item.radius,
-                                    2,
-                                    {
-                                        name: item.shapeName,
-                                        type: item.ruleList[0].ruleType,
-                                        speed: item.ruleList[0].rule.speed
-                                    }
-                                );
-                            } else {
-                                // 多边形或矩形围栏
-                                drawGeoFence(this.fenceAreaLimitLayer, item.points, 2, {
-                                    name: item.shapeName,
-                                    type: item.ruleList[0].ruleType,
-                                    speed: item.ruleList[0].rule.speed
-                                });
-                            }
-                        });
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: '无相关越线区域围栏'
-                        });
-                    }
-                });
-            });
+            // Promise.all([
+            //     gpsPromise,
+            //     alarmPromise,
+            //     dashboardPromise,
+            //     fenceSpeedLimitPromise,
+            //     fenceAreaLimitPromise
+            // ]).then(r => {
+            //     // 处理gps响应结果
+            //     const gpsJson = r[0];
+            //     if (gpsJson.code === '0') {
+            //         if (gpsJson.data.length > 0) {
+            //             this.gpsTotalResult = gpsJson.data;
+            //             this.progressTimeRange = [
+            //                 new Date(this.gpsTotalResult[0].time).toTimeString().substr(0, 8),
+            //                 new Date(this.gpsTotalResult[this.gpsTotalResult.length - 1].time)
+            //                     .toTimeString()
+            //                     .substr(0, 8)
+            //             ];
+            //             this.$refs.trackToolBar.init();
+            //             // console.log(this.selectedDevices[0].name)
+            //             this.$refs.trackToolBar.setPlateNo(this.selectedDevices[0].name);
+            //             this.$refs.selectedCarCard.setParams(
+            //                 this.selectedDevices[0].name,
+            //                 toTimeNormalString(toTimezoneString(this.time[0])),
+            //                 toTimeNormalString(toTimezoneString(this.time[1]))
+            //             );
+            //             this.isShowTab = true;
+            //             this.upDateEchart();
+            //         } else {
+            //             this.$message({
+            //                 type: 'warning',
+            //                 message: '无相关轨迹信息'
+            //             });
+            //             // 没有轨迹信息不进行下面的判断
+            //             this.loading = false;
+            //             return;
+            //         }
+            //     } else {
+            //         this.$message.error('获取轨迹信息异常');
+            //         // 没有轨迹信息不进行下面的判断
+            //         this.loading = false;
+            //         return;
+            //     }
+            //
+            //     // 处理报警数据
+            //     this.$nextTick(() => {
+            //         // console.log(r)
+            //         const alarmJson = r[1];
+            //         if (alarmJson.code === '0') {
+            //             if (alarmJson.data.list.length > 0) {
+            //                 const alarm = alarmJson.data.list;
+            //                 //
+            //                 // console.log(alarmJson.data.list)
+            //                 // console.log(this.gpsTotalResult)
+            //
+            //                 alarm.forEach( i => {
+            //                     this.gpsTotalResult.forEach( n => {
+            //                         if(i.beginTime === n.time &&
+            //                             i.beginLatitude === n.latitude &&
+            //                             i.beginLongitude === n.longitude
+            //                         ){
+            //                             // console.log(n.ibmData);
+            //                             i['ibmData'] = n.ibmData;
+            //                             i['time'] = n.time;
+            //                             i['serverTime'] = n.serverTime;
+            //                             i['satellites'] = n.satellites;
+            //                             i['mileage'] = n.mileAge;
+            //                             i['shapeLimitSpeed'] = n.shapeLimitSpeed;
+            //                             i['shapeName'] = n.shapeName;
+            //                             i['attendanceDTO'] = n.attendanceDTO;
+            //                         }
+            //                     })
+            //                 })
+            //                 // console.log(alarm)
+            //                 this.alarmResult = alarm;
+            //
+            //                 // this.isShow = false;
+            //             } else {
+            //                 this.alarmResult = [];
+            //                 this.$message({
+            //                     type: 'warning',
+            //                     message: '无相关报警信息'
+            //                 });
+            //             }
+            //         } else {
+            //             this.$message.error('获取报警信息异常');
+            //         }
+            //         this.showTrack();
+            //     });
+            //
+            //     // 面板数据
+            //     this.$nextTick(() => {
+            //         const milTotal = r[0].data;
+            //         // console.log('第一个里程数：'+milTotal[0].mileage)
+            //         // console.log('最后一个里程数：'+milTotal[milTotal.length-1].mileage)
+            //         const dashboardJson = r[2];
+            //         let beginMil;
+            //         let endMil;
+            //         if (dashboardJson.code === '0' && r[0].code === '0') {
+            //             if (dashboardJson.data) {
+            //                 this.status = dashboardJson.data;
+            //                 // add by chenying 2021.10.14
+            //                 if (milTotal) {
+            //                     // milTotal ;
+            //                     for (let i = 0; i < milTotal.length; i++) {
+            //                         if (
+            //                             milTotal[i].correctFlag === 0 &&
+            //                             milTotal[i].longitude !== 0 &&
+            //                             milTotal[i].latitude !== 0 &&
+            //                             milTotal[i].mileAge !== 0
+            //                         ) {
+            //                             beginMil = milTotal[i].mileAge;
+            //                             break;
+            //                         }
+            //                     }
+            //
+            //                     // const reverseList = milTotal.reverse(); // 反转数组
+            //                     for (let v = milTotal.length-1; v >= 0; v--) {
+            //                         if (
+            //                             milTotal[v].correctFlag === 0 &&
+            //                             milTotal[v].longitude !== 0 &&
+            //                             milTotal[v].latitude !== 0 &&
+            //                             milTotal[v].mileAge !== 0
+            //                         ) {
+            //                             endMil = milTotal[v].mileAge;
+            //                             break;
+            //                         }
+            //                     }
+            //                 }
+            //                 const mileageRate =  endMil - beginMil ;
+            //                 // this.status.mileage = mileageRate; // 给数组添加元素
+            //                 this.status = Object.assign(dashboardJson.data, {"mileage": mileageRate ? mileageRate : 0}) ;
+            //                 // console.log(this.status)
+            //             } else {
+            //                 this.$message({
+            //                     type: 'warning',
+            //                     message: '无相关统计信息'
+            //                 });
+            //             }
+            //         } else {
+            //             this.$message('获取面板信息异常');
+            //         }
+            //         this.$refs.trackConfig.initMenuList();
+            //     });
+            //     this.loading = false;
+            //     // 限速区域
+            //     this.$nextTick(() => {
+            //         if (r[0].code !== '0' || !r[0].data.length) {
+            //             return;
+            //         }
+            //         this.fenceSpeedLimitLayer.removeAllFeatures();
+            //         const fenceSpeedLimitJson = r[3];
+            //         if (fenceSpeedLimitJson.code === '0') {
+            //             fenceSpeedLimitJson.data.list.forEach(item => {
+            //                 // 圆形围栏
+            //                 hidFence(this.fenceSpeedLimitLayer);
+            //                 if (item.shapeType === 1) {
+            //                     drawCircleFence(
+            //                         this.map,
+            //                         this.fenceSpeedLimitLayer,
+            //                         item.points[0],
+            //                         item.radius,
+            //                         1,
+            //                         {
+            //                             name: item.shapeName,
+            //                             type: item.ruleList[0].ruleType,
+            //                             speed: item.ruleList[0].rule.speed
+            //                         }
+            //                     );
+            //                 } else {
+            //                     // 多边形或矩形围栏
+            //                     drawGeoFence(this.fenceSpeedLimitLayer, item.points, 1, {
+            //                         name: item.shapeName,
+            //                         type: item.ruleList[0].ruleType,
+            //                         speed: item.ruleList[0].rule.speed
+            //                     });
+            //                 }
+            //             });
+            //         } else {
+            //             this.$message({
+            //                 type: 'warning',
+            //                 message: '无相关限速区域围栏'
+            //             });
+            //         }
+            //     });
+            //
+            //     // 越线区域
+            //     this.$nextTick(() => {
+            //         if (r[0].code !== '0' || !r[0].data.length) {
+            //             return;
+            //         }
+            //         this.fenceAreaLimitLayer.removeAllFeatures();
+            //         const fenceAreaLimitJson = r[4];
+            //         if (fenceAreaLimitJson.code === '0') {
+            //             fenceAreaLimitJson.data.list.forEach(item => {
+            //                 // 圆形围栏
+            //                 hidFence(this.fenceAreaLimitLayer);
+            //                 if (item.shapeType === 1) {
+            //                     drawCircleFence(
+            //                         this.map,
+            //                         this.fenceAreaLimitLayer,
+            //                         item.points[0],
+            //                         item.radius,
+            //                         2,
+            //                         {
+            //                             name: item.shapeName,
+            //                             type: item.ruleList[0].ruleType,
+            //                             speed: item.ruleList[0].rule.speed
+            //                         }
+            //                     );
+            //                 } else {
+            //                     // 多边形或矩形围栏
+            //                     drawGeoFence(this.fenceAreaLimitLayer, item.points, 2, {
+            //                         name: item.shapeName,
+            //                         type: item.ruleList[0].ruleType,
+            //                         speed: item.ruleList[0].rule.speed
+            //                     });
+            //                 }
+            //             });
+            //         } else {
+            //             this.$message({
+            //                 type: 'warning',
+            //                 message: '无相关越线区域围栏'
+            //             });
+            //         }
+            //     });
+            // });
         },
         upDateEchart() {
             const xDates = [];
